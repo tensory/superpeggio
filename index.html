@@ -54,20 +54,19 @@
             });
 
             cycle.togglePlay = function(noteName) {
-
-                if (!Cycle.chromatic[noteName]) {
+                var tone = Cycle.chromatic[noteName];
+                if (!tone) {
                     return false;
                 }
 
-                if (Cycle.chromatic[noteName].sound) {
-                    if (Cycle.chromatic[noteName].isPlaying == false) {
+                if (tone.sound) {
+                    if (tone.isPlaying == false) {
                         $('#' + noteName).addClass('pressed');
-                        Cycle.chromatic[noteName].isPlaying = true;
                     } else {
                         $('#' + noteName).removeClass('pressed');
-                        Cycle.chromatic[noteName].isPlaying = false;
                     }
-                    Cycle.chromatic[noteName].sound.togglePlay();
+                    tone.sound.togglePlay();
+                    tone.isPlaying = !(tone.isPlaying);
                 }
                 return true;
             };

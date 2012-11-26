@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <script src="jquery-1.8.3.min.js"></script>
     <script src="handlebars-1.0.rc.1.js"></script>
+    <script src="buzz.js"></script>
     <script>
 
         function EvalSound(id) {
@@ -48,6 +49,7 @@
                         sound.setAttribute('autostart', false);
                         sound.setAttribute('width', 0);
                         sound.setAttribute('height', 0);
+                        sound.setAttribute('loop', true);
                         sound.setAttribute('enablejavascript', true);
                         document.body.appendChild(sound);
                     },
@@ -70,10 +72,8 @@
                     $('#' + noteName).addClass('pressed');
                     var embedded = $('#tone-' + noteName);
                     if (embedded.length > 0) {
-                        window.console.log(embedded)
                         EvalSound('tone-' + noteName);
                     }
-
                 } else {
                     $('#' + noteName).removeClass('pressed');
                     Cycle.chromatic[noteName].isPlaying = false;

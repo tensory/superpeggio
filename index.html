@@ -22,6 +22,16 @@
                 'b': 'b'
             };
 
+            // Initialize Cycle.chromatic
+            $.each(cycle.chromatic, function(element, i) {
+                var symbol = cycle.chromatic[element];
+                cycle.chromatic[element] = {
+                    symbol: symbol,
+                    isPlaying: false
+                }
+            });
+
+
             cycle.togglePlay = function(noteName) {
                 if (!Cycle.chromatic[noteName]) {
                     return false;
@@ -43,12 +53,12 @@
             $.each(Cycle.chromatic, function(element, i) {
                 // Start loading source files.
 
-/*
+
                 // Generate buttons.
                 var source = Handlebars.compile($('#note-button-template').html());
-                var button = source({ id: element, name: generator.chromatic[element] });
+                var button = source({ id: element, name: Cycle.chromatic[element].symbol });
                 $('body').append(button);
-                */
+
             });
 
             $('.note-name').on('click', function(e) {

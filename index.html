@@ -36,7 +36,6 @@
                     isPlaying: false
                 };
 
-
                 var pathTo = 'files/' + element + '.wav';
                 $.ajax({
                     type: 'GET',
@@ -68,13 +67,16 @@
 
                 if (Cycle.chromatic[noteName] && Cycle.chromatic[noteName].isPlaying == false) {
                     Cycle.chromatic[noteName].isPlaying = true;
-
+                    $('#' + noteName).addClass('pressed');
                     var embedded = $('#tone-' + noteName);
                     if (embedded.length > 0) {
                         window.console.log(embedded)
                         EvalSound('tone-' + noteName);
                     }
 
+                } else {
+                    $('#' + noteName).removeClass('pressed');
+                    Cycle.chromatic[noteName].isPlaying = false;
                 }
                 return false;
             };
@@ -110,6 +112,10 @@
             height: 22px;
             width: 30px;
             margin: 0.1em;
+        }
+
+        button.pressed {
+            background-color: #CCC;
         }
     </style>
 </head>

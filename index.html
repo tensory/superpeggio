@@ -5,9 +5,8 @@
     <script src="jquery-1.8.3.min.js"></script>
     <script src="handlebars-1.0.rc.1.js"></script>
     <script>
-        var Cycle = (function() {
+        Cycle = (function() {
             var cycle = {};
-
             cycle.chromatic = {
                 'c': 'c',
                 'c-sharp': 'c♯',
@@ -22,23 +21,39 @@
                 'b-flat': 'b♭',
                 'b': 'b'
             };
-            return cycle;
-        });
 
+            cycle.togglePlay = function(noteName) {
+                if (!Cycle.chromatic[noteName]) {
+                    return false;
+                }
+
+                if (Cycle.chromatic[noteName] && Cycle.chromatic[noteName].isPlaying == false) {
+                    return true;
+                }
+                return false;
+            };
+
+            return cycle;
+        })();
 
         $(document).ready(function() {
-            var generator = new Cycle();
-            window.console.log(generator);
+            window.console.log(Cycle);
 
             // Generate buttons.
-            $.each(generator.chromatic, function(element, i) {
+            $.each(Cycle.chromatic, function(element, i) {
                 // Start loading source files.
 
-
+/*
                 // Generate buttons.
                 var source = Handlebars.compile($('#note-button-template').html());
                 var button = source({ id: element, name: generator.chromatic[element] });
                 $('body').append(button);
+                */
+            });
+
+            $('.note-name').on('click', function(e) {
+                e.preventDefault();
+                Cycle.togglePlay($(this).attr('id'));
             });
         });
     </script>
@@ -54,7 +69,6 @@
 <body>
 
 </body>
-
 
 <script id="note-button-template" type="text/x-handlebars-template">
     <button id="{{ id }}" class="note-name">{{ name }}</button>

@@ -32,7 +32,11 @@
 
             // Generate buttons.
             $.each(generator.chromatic, function(element, i) {
-                var source = Handlebars.compile($('#clickable-note-template').html());
+                // Start loading source files.
+
+
+                // Generate buttons.
+                var source = Handlebars.compile($('#note-button-template').html());
                 var button = source({ id: element, name: generator.chromatic[element] });
                 $('body').append(button);
             });
@@ -52,7 +56,7 @@
 </body>
 
 
-<script id="clickable-note-template" type="text/x-handlebars-template">
+<script id="note-button-template" type="text/x-handlebars-template">
     <button id="{{ id }}" class="note-name">{{ name }}</button>
 </script>
 </html>

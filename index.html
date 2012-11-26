@@ -5,6 +5,12 @@
     <script src="jquery-1.8.3.min.js"></script>
     <script src="handlebars-1.0.rc.1.js"></script>
     <script>
+
+        function EvalSound(id) {
+            var thisSound = document.getElementById(id);
+            thisSound.Play();
+        };
+
         Cycle = (function() {
             var cycle = {};
             cycle.chromatic = {
@@ -30,10 +36,27 @@
                     isPlaying: false
                 };
 
+
+                var pathTo = 'files/' + element + '.wav';
                 $.ajax({
                     type: 'GET',
-                    url: 'files/' + element + '.wav',
-                    success: function(data) {}
+                    url: pathTo,
+                    success: function() {
+                        var sound = document.createElement('embed');
+                        sound.setAttribute('src', pathTo);
+                        sound.setAttribute('id', 'tone-' + element);
+                        sound.setAttribute('hidden', 'true');
+                        sound.setAttribute('autostart', false);
+                        sound.setAttribute('width', 0);
+                        sound.setAttribute('height', 0);
+                        sound.setAttribute('enablejavascript', true);
+                        document.body.appendChild(sound);
+                    },
+                    error: function(jqxhr) {
+                        console.log('how does this work');
+                        console.log(jqxhr);
+
+                    }
                 })
 
             });
@@ -44,13 +67,21 @@
                 }
 
                 if (Cycle.chromatic[noteName] && Cycle.chromatic[noteName].isPlaying == false) {
-                    return true;
+                    Cycle.chromatic[noteName].isPlaying = true;
+
+                    var embedded = $('#tone-' + noteName);
+                    if (embedded.length > 0) {
+                        window.console.log(embedded)
+                        EvalSound('tone-' + noteName);
+                    }
+
                 }
                 return false;
             };
 
             return cycle;
         })();
+
 
         $(document).ready(function() {
             window.console.log(Cycle);

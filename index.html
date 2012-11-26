@@ -10,41 +10,30 @@
 
             cycle.chromatic = {
                 'c': 'c',
-                'c-sharp': 'c&#9839;',
+                'c-sharp': 'c♯',
                 'd': 'd',
                 'e-flat': 'e♭',
                 'e': 'e',
                 'f': 'f',
-                'f-sharp': 'f&#9839;',
+                'f-sharp': 'f♯',
                 'g': 'g',
                 'a-flat': 'a♭',
                 'a': 'a',
                 'b-flat': 'b♭',
                 'b': 'b'
             };
-            cycle.names = [];
-            cycle.values = [];
-            cycle.init = function() {
-
-                $.each(cycle.notes, function(e, i) {
-                    cycle.names.push(e);
-                    cycle.values.push(cycle.notes[e]);
-                });
-            };
-
             return cycle;
         });
 
 
         $(document).ready(function() {
             var generator = new Cycle();
-            generator.init();
             window.console.log(generator);
 
             // Generate buttons.
-            $.each(generator.notes, function(element, i) {
+            $.each(generator.chromatic, function(element, i) {
                 var source = Handlebars.compile($('#clickable-note-template').html());
-                var button = source({ id: element, name: generator.notes[element] });
+                var button = source({ id: element, name: generator.chromatic[element] });
                 $('body').append(button);
             });
         });

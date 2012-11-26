@@ -42,16 +42,7 @@
                     type: 'GET',
                     url: pathTo,
                     success: function() {
-                        var sound = document.createElement('embed');
-                        sound.setAttribute('src', pathTo);
-                        sound.setAttribute('id', 'tone-' + element);
-                        sound.setAttribute('hidden', 'true');
-                        sound.setAttribute('autostart', false);
-                        sound.setAttribute('width', 0);
-                        sound.setAttribute('height', 0);
-                        sound.setAttribute('loop', true);
-                        sound.setAttribute('enablejavascript', true);
-                        document.body.appendChild(sound);
+                        cycle.chromatic[element].sound = new buzz.sound(pathTo, { loop: true });
                     },
                     error: function(jqxhr) {
                         console.log('how does this work');
@@ -63,22 +54,22 @@
             });
 
             cycle.togglePlay = function(noteName) {
+
                 if (!Cycle.chromatic[noteName]) {
                     return false;
                 }
 
-                if (Cycle.chromatic[noteName] && Cycle.chromatic[noteName].isPlaying == false) {
-                    Cycle.chromatic[noteName].isPlaying = true;
-                    $('#' + noteName).addClass('pressed');
-                    var embedded = $('#tone-' + noteName);
-                    if (embedded.length > 0) {
-                        EvalSound('tone-' + noteName);
+                if (Cycle.chromatic[noteName].sound) {
+                    if (Cycle.chromatic[noteName].isPlaying == false) {
+                        $('#' + noteName).addClass('pressed');
+                        Cycle.chromatic[noteName].isPlaying = true;
+                    } else {
+                        $('#' + noteName).removeClass('pressed');
+                        Cycle.chromatic[noteName].isPlaying = false;
                     }
-                } else {
-                    $('#' + noteName).removeClass('pressed');
-                    Cycle.chromatic[noteName].isPlaying = false;
+                    Cycle.chromatic[noteName].sound.togglePlay();
                 }
-                return false;
+                return true;
             };
 
             return cycle;
@@ -120,8 +111,6 @@
     </style>
 </head>
 <body>
-
-<embed src="files/a.wav"></embed>
 </body>
 
 <script id="note-button-template" type="text/x-handlebars-template">

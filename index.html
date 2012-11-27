@@ -7,10 +7,10 @@
     <script src="buzz.js"></script>
     <script>
 
-        function EvalSound(id) {
-            var thisSound = document.getElementById(id);
-            thisSound.Play();
-        };
+        /**
+         * todo:
+         * add tones an octave above, but do not make them the , so that a
+         */
 
         Cycle = (function() {
             var cycle = {};
@@ -42,7 +42,27 @@
                     type: 'GET',
                     url: pathTo,
                     success: function() {
-                        cycle.chromatic[element].sound = new buzz.sound(pathTo, { loop: true });
+                        cycle.chromatic[element].soundLeft = new buzz.sound(pathTo, { loop: false });
+                        cycle.chromatic[element].soundRight = new buzz.sound(pathTo, { loop: false });
+                        // Hacked "seamless" playback
+                        // http://forestmist.org/2010/04/html5-audio-loops/
+                        // tl;dr: HTML5 Audio.loop doesn't work seamlessly in any browser.
+                        // Two alternating sounds work around the gap.
+                        cycle.chromatic[element].soundLeft.bind('timeupdate', function(e) {
+                            if (this.getTime() > 2.8) {
+                                cycle.chromatic[element].soundRight.play();
+                            }
+                        });
+
+                        cycle.chromatic[element].soundRight.bind('timeupdate', function(e) {
+                            if (this.getTime() > 2.8) {
+                                cycle.chromatic[element].soundLeft.play();
+                            }
+                        });
+
+                        cycle.chromatic[element].soundRight.bind('play', function(e) {
+                            cycle.chromatic[element].soundLeft.stop();
+                        });
                     },
                     error: function(jqxhr) {
                         console.log('how does this work');
@@ -52,20 +72,27 @@
                 })
 
             });
-
+            
             cycle.togglePlay = function(noteName) {
                 var tone = Cycle.chromatic[noteName];
+
                 if (!tone) {
                     return false;
                 }
+                window.console.log(tone.isPlaying);
 
-                if (tone.sound) {
+                if (tone.soundLeft) {
                     if (tone.isPlaying == false) {
+                        tone.soundLeft.play();
                         $('#' + noteName).addClass('pressed');
                     } else {
+                        tone.soundLeft.unbind('timeupdate');
+                        tone.soundRight.unbind('timeupdate');
+                        tone.soundRight.stop();
+                        tone.soundLeft.stop();
                         $('#' + noteName).removeClass('pressed');
                     }
-                    tone.sound.togglePlay();
+
                     tone.isPlaying = !(tone.isPlaying);
                 }
                 return true;

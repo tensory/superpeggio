@@ -51,16 +51,23 @@
                         cycle.chromatic[element].soundLeft.bind('timeupdate', function(e) {
                             if (this.getTime() > 2.8) {
                                 cycle.chromatic[element].soundRight.play();
+                                this.mute();
                             }
                         });
 
                         cycle.chromatic[element].soundRight.bind('timeupdate', function(e) {
                             if (this.getTime() > 2.8) {
                                 cycle.chromatic[element].soundLeft.play();
+                                this.mute();
                             }
                         });
 
+                        cycle.chromatic[element].soundLeft.bind('play', function(e) {
+                            this.unmute();
+                        });
+
                         cycle.chromatic[element].soundRight.bind('play', function(e) {
+                            this.unmute();
                             cycle.chromatic[element].soundLeft.stop();
                         });
                     },

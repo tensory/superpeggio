@@ -72,7 +72,7 @@
                 })
 
             });
-            
+
             cycle.togglePlay = function(noteName) {
                 var tone = Cycle.chromatic[noteName];
 
@@ -86,10 +86,7 @@
                         tone.soundLeft.play();
                         $('#' + noteName).addClass('pressed');
                     } else {
-                        tone.soundLeft.unbind('timeupdate');
-                        tone.soundRight.unbind('timeupdate');
-                        tone.soundRight.stop();
-                        tone.soundLeft.stop();
+                        stopSound(tone);
                         $('#' + noteName).removeClass('pressed');
                     }
 
@@ -101,6 +98,26 @@
             return cycle;
         })();
 
+        var restartSound = function(tone) {
+            tone.soundLeft.bind('timeupdate', function(e) {
+                if (this.getTime() > 2.8) {
+                    tone.soundRight.play();
+                }
+            });
+
+            tone.soundRight.bind('timeupdate', function(e) {
+                if (this.getTime() > 2.8) {
+                    tone.soundLeft.play();
+                }
+            });
+        };
+
+        var stopSound = function(tone) {
+            tone.soundLeft.unbind('timeupdate');
+            tone.soundRight.unbind('timeupdate');
+            tone.soundLeft.stop();
+            tone.soundRight.stop();
+        };
 
         $(document).ready(function() {
             window.console.log(Cycle);

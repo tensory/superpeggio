@@ -29,6 +29,36 @@
                 'b': 'b'
             };
 
+            cycle.startSound = function(tone) {
+                if (cycle.chromatic[tone].soundLeft && cycle.chromatic[tone].soundRight) {
+                    cycle.chromatic[tone].soundLeft.bind('timeupdate', function(e) {
+                        if (this.getTime() > 2.8) {
+                            cycle.chromatic[tone].soundRight.play();
+                            this.mute();
+                        }
+                    });
+
+                    cycle.chromatic[tone].soundRight.bind('timeupdate', function(e) {
+                        if (this.getTime() > 2.8) {
+                            cycle.chromatic[tone].soundLeft.play();
+                            this.mute();
+                        }
+                    });
+
+                    cycle.chromatic[tone].soundLeft.bind('play', function(e) {
+                        this.unmute();
+                    });
+
+                    cycle.chromatic[tone].soundRight.bind('play', function(e) {
+                        this.unmute();
+                        cycle.chromatic[tone].soundLeft.stop();
+                    });
+
+                } else {
+                    throw new Exception('Sounds are not ready');
+                }
+            };
+
             // Initialize Cycle.chromatic
             $.each(cycle.chromatic, function(element, i) {
                 var symbol = cycle.chromatic[element];
@@ -49,26 +79,19 @@
                         // tl;dr: HTML5 Audio.loop doesn't work seamlessly in any browser.
                         // Two alternating sounds work around the gap.
                         cycle.chromatic[element].soundLeft.bind('timeupdate', function(e) {
-                            if (this.getTime() > 2.8) {
+                            if (this.getTime() > 2) {
                                 cycle.chromatic[element].soundRight.play();
-                                this.mute();
+                                this.setTime(0);
+                                this.pause();
                             }
                         });
 
                         cycle.chromatic[element].soundRight.bind('timeupdate', function(e) {
-                            if (this.getTime() > 2.8) {
+                            if (this.getTime() > 2) {
                                 cycle.chromatic[element].soundLeft.play();
-                                this.mute();
+                                this.setTime(0);
+                                this.pause();
                             }
-                        });
-
-                        cycle.chromatic[element].soundLeft.bind('play', function(e) {
-                            this.unmute();
-                        });
-
-                        cycle.chromatic[element].soundRight.bind('play', function(e) {
-                            this.unmute();
-                            cycle.chromatic[element].soundLeft.stop();
                         });
                     },
                     error: function(jqxhr) {
@@ -105,17 +128,28 @@
             return cycle;
         })();
 
-        var restartSound = function(tone) {
-            tone.soundLeft.bind('timeupdate', function(e) {
+        var restartSound = function(cycletone) {
+            cycle.chromatic[element].soundLeft.bind('timeupdate', function(e) {
                 if (this.getTime() > 2.8) {
-                    tone.soundRight.play();
+                    cycle.chromatic[element].soundRight.play();
+                    this.mute();
                 }
             });
 
-            tone.soundRight.bind('timeupdate', function(e) {
+            cycle.chromatic[element].soundRight.bind('timeupdate', function(e) {
                 if (this.getTime() > 2.8) {
-                    tone.soundLeft.play();
+                    cycle.chromatic[element].soundLeft.play();
+                    this.mute();
                 }
+            });
+
+            cycle.chromatic[element].soundLeft.bind('play', function(e) {
+                this.unmute();
+            });
+
+            cycle.chromatic[element].soundRight.bind('play', function(e) {
+                this.unmute();
+                cycle.chromatic[element].soundLeft.stop();
             });
         };
 

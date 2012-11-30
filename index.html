@@ -113,7 +113,7 @@
 
                 if (tone.soundLeft) {
                     if (tone.isPlaying == false) {
-                        tone.soundLeft.play();
+                        restartSound(tone);
                         $('#' + noteName).addClass('pressed');
                     } else {
                         stopSound(tone);
@@ -128,36 +128,16 @@
             return cycle;
         })();
 
-        var restartSound = function(cycletone) {
-            cycle.chromatic[element].soundLeft.bind('timeupdate', function(e) {
-                if (this.getTime() > 2.8) {
-                    cycle.chromatic[element].soundRight.play();
-                    this.mute();
-                }
-            });
 
-            cycle.chromatic[element].soundRight.bind('timeupdate', function(e) {
-                if (this.getTime() > 2.8) {
-                    cycle.chromatic[element].soundLeft.play();
-                    this.mute();
-                }
-            });
-
-            cycle.chromatic[element].soundLeft.bind('play', function(e) {
-                this.unmute();
-            });
-
-            cycle.chromatic[element].soundRight.bind('play', function(e) {
-                this.unmute();
-                cycle.chromatic[element].soundLeft.stop();
-            });
+        var restartSound = function(tone) {
+            tone.soundLeft.unmute();
+            tone.soundRight.unmute();
+            tone.soundLeft.play();
         };
 
         var stopSound = function(tone) {
-            tone.soundLeft.unbind('timeupdate');
-            tone.soundRight.unbind('timeupdate');
-            tone.soundLeft.stop();
-            tone.soundRight.stop();
+            tone.soundLeft.mute();
+            tone.soundRight.mute();
         };
 
         $(document).ready(function() {

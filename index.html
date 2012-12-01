@@ -128,6 +128,32 @@
             return cycle;
         })();
 
+        Wheel = (function($) {
+            var canvas,
+                    properties = {
+                        RADIUS: 75
+                    };
+
+            return {
+                init: function(id) {
+                    canvas = document.getElementById(id);
+                    $.extend(properties, {
+                        X: canvas.width / 2,
+                        Y: canvas.height / 2
+                    });
+                },
+                draw: function() {
+                    var context = canvas.getContext('2d');
+                    context.beginPath();
+                    context.arc(properties.X, properties.Y, properties.RADIUS, 0, 1, false);
+                    context.lineWidth = 15;
+
+                    // line color
+                    context.strokeStyle = 'black';
+                    context.stroke();
+                }
+            };
+        })(jQuery);
 
         var restartSound = function(tone) {
             tone.soundLeft.unmute();
@@ -141,8 +167,7 @@
         };
 
         $(document).ready(function() {
-            window.console.log(Cycle);
-
+            Wheel.init('wheel');
             // Generate buttons.
             $.each(Cycle.chromatic, function(element, i) {
                 // Start loading source files.
@@ -160,23 +185,7 @@
                 Cycle.togglePlay($(this).attr('id'));
             });
 
-
-            var canvas = document.getElementById('circle');
-            var context = canvas.getContext('2d');
-            var x = canvas.width / 2;
-            var y = canvas.height / 2;
-            var radius = 75;
-            var startAngle = 1.1 * Math.PI;
-            var endAngle = 1.9 * Math.PI;
-            var counterClockwise = false;
-
-            context.beginPath();
-            context.arc(x, y, radius, startAngle, endAngle, counterClockwise);
-            context.lineWidth = 15;
-
-            // line color
-            context.strokeStyle = 'black';
-            context.stroke();
+            Wheel.draw();
         });
     </script>
     <style type="text/css">
@@ -193,7 +202,7 @@
     </style>
 </head>
 <body>
-    <canvas id="circle" width="578" height="250"></canvas>
+    <canvas id="wheel" width="578" height="250"></canvas>
 </body>
 
 <script id="note-button-template" type="text/x-handlebars-template">

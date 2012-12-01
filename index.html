@@ -131,7 +131,9 @@
         Wheel = (function($) {
             var canvas,
                     properties = {
-                        RADIUS: 75
+                        RADIUS: 75,
+                        LINE_WIDTH: 30,
+                        COUNTER_CLOCKWISE: false
                     };
 
             return {
@@ -144,8 +146,12 @@
                 },
                 draw: function() {
                     var context = canvas.getContext('2d');
+                    $.each(properties, function(el, i) {
+                        this[el] = properties[el];
+                    }.bind(this)); // hmm...
+                    
                     context.beginPath();
-                    context.arc(properties.X, properties.Y, properties.RADIUS, 0, 1, false);
+                    context.arc(this.X, this.Y, this.RADIUS, 0, 1, this.COUNTER_CLOCKWISE);
                     context.lineWidth = 15;
 
                     // line color

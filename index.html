@@ -138,7 +138,25 @@
                      }
                  }
                  return size;
-             }
+             },
+            // From http://krazydad.com/tutorials/makecolors.php
+            rgbToColor: function(r, g, b) {
+                return 'rgb(' + r + ',' + g + ',' + b + ')';
+            },
+
+            getColorRainbow: function(size) {
+                var frequency = 0.2;
+                var amplitude = 127; // Half the RGB range
+                var center = 128; // RGB center
+                var colors = [];
+
+                for (var i = 0; i < size; i++) {
+                    var v = Math.floor((Math.sin(frequency * i) * amplitude) + center);
+                    colors.push($.fn.rgbToColor(v,v,v));
+                }
+//                window.console.log('Got right number of colors? ' + result.length == size);
+                return colors;
+            }
         });
 
         Wheel = (function($) {
@@ -191,6 +209,11 @@
         $(document).ready(function() {
             Wheel.init('wheel');
             // Generate buttons.
+
+            var colors = $.fn.getColorRainbow(50);
+            $.each(colors, function(i) {
+                $('body').append('<span style="color: ' + colors[i] + ';">&#9608;</span>');
+            });
             $.each(Cycle.chromatic, function(element, i) {
                 // Start loading source files.
 

@@ -128,12 +128,28 @@
             return cycle;
         })();
 
+
+        $.fn.extend({
+             getObjectLength: function(obj) {
+                 var size = 0;
+                 for (var key in obj) {
+                     if (obj.hasOwnProperty(key)) {
+                         size++;
+                     }
+                 }
+                 return size;
+             }
+        });
+
         Wheel = (function($) {
+            var l = $.fn.getObjectLength(Cycle.chromatic);
+            console.log(l);
             var canvas,
                     properties = {
                         RADIUS: 75,
                         LINE_WIDTH: 30,
-                        COUNTER_CLOCKWISE: false
+                        COUNTER_CLOCKWISE: false,
+                        ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2)
                     };
 
             return {
@@ -149,10 +165,10 @@
                     $.each(properties, function(el, i) {
                         this[el] = properties[el];
                     }.bind(this)); // hmm...
-                    
+
                     context.beginPath();
-                    context.arc(this.X, this.Y, this.RADIUS, 0, 1, this.COUNTER_CLOCKWISE);
-                    context.lineWidth = 15;
+                    context.arc(this.X, this.Y, this.RADIUS, 0, this.ARC_LENGTH, this.COUNTER_CLOCKWISE);
+                    context.lineWidth = this.LINE_WIDTH;
 
                     // line color
                     context.strokeStyle = 'black';

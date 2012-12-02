@@ -154,7 +154,6 @@
                 for (var i = 0; i < size; i++) {
                     colors.push($.fn.hslToColor(Math.floor(cycle * i), saturation, light));
                 }
-//                window.console.log('Got right number of colors? ' + result.length == size);
                 return colors;
             }
         });
@@ -167,30 +166,42 @@
                         RADIUS: 75,
                         LINE_WIDTH: 30,
                         COUNTER_CLOCKWISE: false,
-                        ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2)
+                        ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2), // One-nth of the circle
+                        SIZE: 500
                     };
 
             return {
                 init: function(id) {
                     canvas = document.getElementById(id);
+                    canvas.width = properties.SIZE;
+                    canvas.height = properties.SIZE;
                     $.extend(properties, {
                         X: canvas.width / 2,
                         Y: canvas.height / 2
                     });
                 },
-                draw: function() {
+                draw: function(colors) {
+                    colors = colors || [];
                     var context = canvas.getContext('2d');
-                    $.each(properties, function(el, i) {
-                        this[el] = properties[el];
-                    }.bind(this)); // hmm...
 
-                    context.beginPath();
-                    context.arc(this.X, this.Y, this.RADIUS, 0, this.ARC_LENGTH, this.COUNTER_CLOCKWISE);
-                    context.lineWidth = this.LINE_WIDTH;
+                    if (colors.length) {
+                        $.each(colors, function(i, el) {
+                            context.beginPath();
+                            var begin = properties.ARC_LENGTH * i;
+                            var end = begin + properties.ARC_LENGTH;
 
-                    // line color
-                    context.strokeStyle = 'black';
-                    context.stroke();
+                            context.arc(properties.X, properties.Y, properties.RADIUS, begin, end, properties.COUNTER_CLOCKWISE);
+                            context.lineWidth = properties.LINE_WIDTH;
+
+                            // line color
+                            context.strokeStyle = el;
+                            context.stroke();
+                        });
+
+                    } else {
+                        throw RangeException("No color array defined");
+                    }
+
                 }
             };
         })(jQuery);
@@ -210,7 +221,7 @@
             Wheel.init('wheel');
             // Generate buttons.
 
-            var colors = $.fn.getColorRainbow(500);
+            var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.chromatic));
             $.each(colors, function(i) {
                 $('body').append('<span style="color: ' + colors[i] + ';">&#9608;</span>');
             });
@@ -230,7 +241,7 @@
                 Cycle.togglePlay($(this).attr('id'));
             });
 
-            Wheel.draw();
+            Wheel.draw(colors);
         });
     </script>
     <style type="text/css">
@@ -247,7 +258,7 @@
     </style>
 </head>
 <body>
-    <canvas id="wheel" width="578" height="250"></canvas>
+    <canvas id="wheel"></canvas>
 </body>
 
 <script id="note-button-template" type="text/x-handlebars-template">

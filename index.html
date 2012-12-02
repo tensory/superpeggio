@@ -139,20 +139,20 @@
                  }
                  return size;
              },
+
             // From http://krazydad.com/tutorials/makecolors.php
-            rgbToColor: function(r, g, b) {
-                return 'rgb(' + r + ',' + g + ',' + b + ')';
+            hslToColor: function(h, s, l) {
+                return 'hsl(' + h + ',' + s + '%,' + l + '%)';
             },
 
             getColorRainbow: function(size) {
-                var frequency = 0.2;
-                var amplitude = 127; // Half the RGB range
-                var center = 128; // RGB center
+                var limit = 360; // degrees of HSL values
+                var cycle = limit/(size);
+                var saturation = 80, light = 50;
                 var colors = [];
 
                 for (var i = 0; i < size; i++) {
-                    var v = Math.floor((Math.sin(frequency * i) * amplitude) + center);
-                    colors.push($.fn.rgbToColor(v,v,v));
+                    colors.push($.fn.hslToColor(Math.floor(cycle * i), saturation, light));
                 }
 //                window.console.log('Got right number of colors? ' + result.length == size);
                 return colors;
@@ -210,7 +210,7 @@
             Wheel.init('wheel');
             // Generate buttons.
 
-            var colors = $.fn.getColorRainbow(50);
+            var colors = $.fn.getColorRainbow(500);
             $.each(colors, function(i) {
                 $('body').append('<span style="color: ' + colors[i] + ';">&#9608;</span>');
             });

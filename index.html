@@ -242,9 +242,6 @@
             // Generate buttons.
 
             var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.chromatic));
-            $.each(colors, function(i) {
-                $('body').append('<span style="color: ' + colors[i] + ';">&#9608;</span>');
-            });
             $.each(Cycle.chromatic, function(element, i) {
                 // Start loading source files.
 

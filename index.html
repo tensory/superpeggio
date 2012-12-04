@@ -125,6 +125,10 @@
                 return true;
             };
 
+            cycle.getNoteSymbol = function(noteName) {
+                return cycle.chromatic[noteName].symbol;
+            };
+
             return cycle;
         })();
 
@@ -140,11 +144,11 @@
                  return size;
              },
 
-            getObjectValues: function(obj) {
+            getObjectKeys: function(obj) {
                 var result = [];
                 for (var key in obj) {
                     if (obj.hasOwnProperty(key)) {
-                        result.push(obj[key]);
+                        result.push(key);
                     }
                 }
                 return result;
@@ -196,7 +200,9 @@
                     var ctx = canvas.getContext('2d');
                     var p = properties;
 
-                    if (colors.length) {
+                    if (Cycle.chromatic && colors.length) {
+                        var noteNames = $.fn.getObjectKeys(Cycle.chromatic);
+                        window.console.log(noteNames[2]);
                         $.each(colors, function(i, el) {
                             ctx.beginPath();
                             var begin = p.ARC_LENGTH * i - (p.ARC_LENGTH/2);
@@ -208,8 +214,9 @@
                             ctx.strokeStyle = el;
                             ctx.stroke();
 
+                            window.console.log(Cycle.getNoteSymbol(noteNames[i]));
                             $('#buttons').append(
-                                    '<div style="position: absolute; text-align: right; margin: 0; border: 1px solid red; left: ' + (Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS) + 'px; top: ' + Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS + 'px">' + $.fn.getObjectValues(Cycle.chromatic)[i] + '</div>'
+                                '<div style="position: absolute; text-align: center; margin: 0; border: 1px solid red; left: ' + (Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS) + 'px; top: ' + Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS + 'px">' + Cycle.getNoteSymbol(noteNames[i]) + '</div>'
                             );
                         });
 

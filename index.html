@@ -187,10 +187,11 @@
                     colors = colors || [];
                     var ctx = canvas.getContext('2d');
 
+
                     if (colors.length) {
                         $.each(colors, function(i, el) {
                             ctx.beginPath();
-                            var begin = properties.ARC_LENGTH * i;
+                            var begin = properties.ARC_LENGTH * i - (properties.ARC_LENGTH/2);
                             var end = begin + properties.ARC_LENGTH;
 
                             ctx.arc(properties.X, properties.Y, properties.RADIUS, begin, end, properties.COUNTER_CLOCKWISE);
@@ -202,8 +203,8 @@
 
                         // Draw a star that creates the divisions between sections
                         ctx.translate(properties.X, properties.Y);
+                        ctx.rotate(properties.ARC_LENGTH / 2);
                         for (var i = 0; i < colors.length / 2; i++) {
-                            window.console.log(i)
                             ctx.beginPath();
                             ctx.lineWidth = properties.DIVIDER_WIDTH;
                             // line color

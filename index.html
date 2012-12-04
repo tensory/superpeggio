@@ -186,37 +186,36 @@
                 draw: function(colors) {
                     colors = colors || [];
                     var ctx = canvas.getContext('2d');
-
+                    var p = properties;
 
                     if (colors.length) {
                         $.each(colors, function(i, el) {
                             ctx.beginPath();
-                            var begin = properties.ARC_LENGTH * i - (properties.ARC_LENGTH/2);
-                            var end = begin + properties.ARC_LENGTH;
+                            var begin = p.ARC_LENGTH * i - (p.ARC_LENGTH/2);
+                            var end = begin + p.ARC_LENGTH;
 
-                            ctx.arc(properties.X, properties.Y, properties.RADIUS, begin, end, properties.COUNTER_CLOCKWISE);
-                            ctx.lineWidth = properties.LINE_WIDTH;
+                            ctx.arc(p.X, p.Y, p.RADIUS, begin, end, p.COUNTER_CLOCKWISE);
+                            ctx.lineWidth = p.LINE_WIDTH;
                             // line color
                             ctx.strokeStyle = el;
                             ctx.stroke();
                         });
 
                         // Draw a star that creates the divisions between sections
-                        ctx.translate(properties.X, properties.Y);
-                        ctx.rotate(properties.ARC_LENGTH / 2);
+                        ctx.translate(p.X, p.Y);
+                        ctx.rotate(p.ARC_LENGTH / 2);
                         for (var i = 0; i < colors.length / 2; i++) {
                             ctx.beginPath();
-                            ctx.lineWidth = properties.DIVIDER_WIDTH;
+                            ctx.lineWidth = p.DIVIDER_WIDTH;
                             // line color
-                            ctx.strokeStyle = properties.DIVIDER_COLOR;
-                            ctx.moveTo(-properties.DIVIDER_RADIUS, 0);
-                            ctx.lineTo(properties.DIVIDER_RADIUS, 0);
+                            ctx.strokeStyle = p.DIVIDER_COLOR;
+                            ctx.moveTo(-p.DIVIDER_RADIUS, 0);
+                            ctx.lineTo(p.DIVIDER_RADIUS, 0);
                             ctx.stroke();
                             ctx.closePath();
-                            ctx.rotate(properties.ARC_LENGTH);
-
+                            ctx.rotate(p.ARC_LENGTH);
                         }
-                        ctx.translate(-properties.X, -properties.Y);
+                        ctx.translate(-p.X, -p.Y);
 
 
                     } else {

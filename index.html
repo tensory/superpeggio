@@ -140,6 +140,15 @@
                  return size;
              },
 
+            getObjectValues: function(obj) {
+                var result = [];
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        result.push(obj[key]);
+                    }
+                }
+                return result;
+            },
             // From http://krazydad.com/tutorials/makecolors.php
             hslToColor: function(h, s, l) {
                 return 'hsla(' + h + ',' + s + '%,' + l + '%, 0.7)';
@@ -159,8 +168,6 @@
         });
 
         Wheel = (function($) {
-            var l = $.fn.getObjectLength(Cycle.chromatic);
-            console.log(l);
             var canvas,
                     properties = {
                         RADIUS: 120,
@@ -169,8 +176,9 @@
                         DIVIDER_RADIUS: 170,
                         DIVIDER_COLOR: '#FFFFFF',
                         COUNTER_CLOCKWISE: false,
+                        LABEL_RADIUS: 130,
                         ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2), // One-nth of the circle
-                        SIZE: 500
+                        SIZE: 400
                     };
 
             return {
@@ -199,6 +207,10 @@
                             // line color
                             ctx.strokeStyle = el;
                             ctx.stroke();
+
+                            $('#buttons').append(
+                                    '<div style="position: absolute; text-align: right; margin: 0; border: 1px solid red; left: ' + (Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS) + 'px; top: ' + Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS + 'px">' + $.fn.getObjectValues(Cycle.chromatic)[i] + '</div>'
+                            );
                         });
 
                         // Draw a star that creates the divisions between sections
@@ -281,11 +293,23 @@
             font-family: sans-serif;
             font-size: 3em;
         }
+
+        #buttons {
+            position: absolute;
+            left: 200px;
+            top: 200px;
+            width: 200px;
+            height: 200px;
+            border: 1px solid red;
+        }
     </style>
 </head>
 <body>
 <h1>cranky chord generator makes angry chords :( </h1>
-    <canvas id="wheel"></canvas>
+<div id="container" style="position: relative;">
+        <canvas id="wheel"></canvas>
+        <div id="buttons"></div>
+</div>
 </body>
 
 <script id="note-button-template" type="text/x-handlebars-template">

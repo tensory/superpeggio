@@ -216,7 +216,7 @@
 
                             window.console.log(Cycle.getNoteSymbol(noteNames[i]));
                             $('#buttons').append(
-                                '<div style="position: absolute; text-align: center; margin: 0; border: 1px solid red; left: ' + (Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS) + 'px; top: ' + Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS + 'px">' + Cycle.getNoteSymbol(noteNames[i]) + '</div>'
+                                '<a href="#" class="note-name" id="' + noteNames[i] + '" style="position: absolute; text-align: center; margin: 0; left: ' + (Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS) + 'px; top: ' + Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS + 'px">' + Cycle.getNoteSymbol(noteNames[i]) + '</a>'
                             );
                         });
 
@@ -261,19 +261,10 @@
             // Generate buttons.
 
             var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.chromatic));
-            $.each(Cycle.chromatic, function(element, i) {
-                // Start loading source files.
 
-
-                // Generate buttons.
-                var source = Handlebars.compile($('#note-button-template').html());
-                var button = source({ id: element, name: Cycle.chromatic[element].symbol });
-                $('body').append(button);
-
-            });
-
-            $('.note-name').on('click', function(e) {
+            $('.note-name').live('click', function(e) {
                 e.preventDefault();
+                window.console.log('yay');
                 Cycle.togglePlay($(this).attr('id'));
             });
 
@@ -298,6 +289,13 @@
             background-color: #CCC;
         }
 
+        .note-name {
+            font-size: 2em;
+            letter-spacing: -3px;
+            color: #000000;
+            text-decoration: none;
+        }
+
         button#kill {
             height: 40px;
             margin: 0.1em;
@@ -318,7 +316,6 @@
             top: 200px;
             width: 200px;
             height: 200px;
-            border: 1px solid red;
         }
     </style>
 </head>

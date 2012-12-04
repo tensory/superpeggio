@@ -167,6 +167,12 @@
                     colors.push($.fn.hslToColor(Math.floor(cycle * i), saturation, light));
                 }
                 return colors;
+            },
+
+            reduceVector: function(original, exponent) {
+                // Adjust for being unable to position typography elements as though they were centered.
+                // Exponents sligtly under 1 are good.
+                return Math.pow(original, exponent)
             }
         });
 
@@ -179,7 +185,7 @@
                         DIVIDER_RADIUS: 170,
                         DIVIDER_COLOR: '#FFFFFF',
                         COUNTER_CLOCKWISE: false,
-                        LABEL_RADIUS: 130,
+                        LABEL_RADIUS: 150,
                         ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2), // One-nth of the circle
                         SIZE: 400
                     };
@@ -213,9 +219,16 @@
                             ctx.strokeStyle = el;
                             ctx.stroke();
 
-                            window.console.log(Cycle.getNoteSymbol(noteNames[i]));
+                            var xCalculated = Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS,
+                                    yCalculated = Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS;
+                            var pos = {
+                            // these values are invented
+                                x: xCalculated - (0.15 * xCalculated) - 8,
+                                y: yCalculated - (0.2 * yCalculated) - 16
+                            };
+
                             $('#buttons').append(
-                                '<a href="#" class="note-name" id="' + noteNames[i] + '" style="position: absolute; text-align: center; margin: 0; left: ' + (Math.cos(i * p.ARC_LENGTH) * p.LABEL_RADIUS) + 'px; top: ' + Math.sin(i * p.ARC_LENGTH) * p.LABEL_RADIUS + 'px">' + Cycle.getNoteSymbol(noteNames[i]) + '</a>'
+                                '<a href="#" class="note-name" id="' + noteNames[i] + '" style="position: absolute; text-align: center; margin: 0; left: ' + pos.x + 'px; top: ' + pos.y + 'px">' + Cycle.getNoteSymbol(noteNames[i]) + '</a>'
                             );
                         });
 
@@ -290,7 +303,7 @@
 
         .note-name {
             font-size: 2em;
-            letter-spacing: -3px;
+            letter-spacing: -2px;
             color: #000000;
             text-decoration: none;
         }

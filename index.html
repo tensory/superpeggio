@@ -163,8 +163,11 @@
             console.log(l);
             var canvas,
                     properties = {
-                        RADIUS: 75,
-                        LINE_WIDTH: 30,
+                        RADIUS: 120,
+                        LINE_WIDTH: 90,
+                        DIVIDER_WIDTH: 10,
+                        DIVIDER_RADIUS: 170,
+                        DIVIDER_COLOR: '#FFFFFF',
                         COUNTER_CLOCKWISE: false,
                         ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2), // One-nth of the circle
                         SIZE: 500
@@ -182,21 +185,38 @@
                 },
                 draw: function(colors) {
                     colors = colors || [];
-                    var context = canvas.getContext('2d');
+                    var ctx = canvas.getContext('2d');
 
                     if (colors.length) {
                         $.each(colors, function(i, el) {
-                            context.beginPath();
+                            ctx.beginPath();
                             var begin = properties.ARC_LENGTH * i;
                             var end = begin + properties.ARC_LENGTH;
 
-                            context.arc(properties.X, properties.Y, properties.RADIUS, begin, end, properties.COUNTER_CLOCKWISE);
-                            context.lineWidth = properties.LINE_WIDTH;
-
+                            ctx.arc(properties.X, properties.Y, properties.RADIUS, begin, end, properties.COUNTER_CLOCKWISE);
+                            ctx.lineWidth = properties.LINE_WIDTH;
                             // line color
-                            context.strokeStyle = el;
-                            context.stroke();
+                            ctx.strokeStyle = el;
+                            ctx.stroke();
                         });
+
+                        // Draw a star that creates the divisions between sections
+                        ctx.translate(properties.X, properties.Y);
+                        for (var i = 0; i < colors.length / 2; i++) {
+                            window.console.log(i)
+                            ctx.beginPath();
+                            ctx.lineWidth = properties.DIVIDER_WIDTH;
+                            // line color
+                            ctx.strokeStyle = properties.DIVIDER_COLOR;
+                            ctx.moveTo(-properties.DIVIDER_RADIUS, 0);
+                            ctx.lineTo(properties.DIVIDER_RADIUS, 0);
+                            ctx.stroke();
+                            ctx.closePath();
+                            ctx.rotate(properties.ARC_LENGTH);
+
+                        }
+                        ctx.translate(-properties.X, -properties.Y);
+
 
                     } else {
                         throw RangeException("No color array defined");

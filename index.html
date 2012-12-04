@@ -264,6 +264,7 @@
         var stopSound = function(tone) {
             tone.soundLeft.mute();
             tone.soundRight.mute();
+            tone.isPlaying = false;
         };
 
         $(document).ready(function() {

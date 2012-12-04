@@ -277,6 +277,15 @@
                 Cycle.togglePlay($(this).attr('id'));
             });
 
+            $('#kill').click(function(e) {
+                e.preventDefault();
+                $.each(Cycle.chromatic, function(i, el) {
+                    if (el.isPlaying) {
+                        stopSound(el);
+                    }
+                });
+            });
+
             Wheel.draw(colors);
         });
     </script>
@@ -284,16 +293,18 @@
         body {
             font-size: 12px;
         }
-        button {
-            display: inline-block;
-            height: 40px;
-            width: 50px;
-            margin: 0.1em;
-            font-size: 2em;
-        }
 
         button.pressed {
             background-color: #CCC;
+        }
+
+        button#kill {
+            height: 40px;
+            margin: 0.1em;
+            font-size: 2em;
+            width: auto;
+            display: block;
+            margin: 0 auto;
         }
 
         h1 {
@@ -316,6 +327,7 @@
 <div id="container" style="position: relative;">
         <canvas id="wheel"></canvas>
         <div id="buttons"></div>
+    <button id="kill">hush</button>
 </div>
 </body>
 

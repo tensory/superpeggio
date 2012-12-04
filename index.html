@@ -128,10 +128,8 @@
                 if (tone.soundLeft) {
                     if (tone.isPlaying == false) {
                         restartSound(tone);
-                        $('#' + noteName).addClass('pressed');
                     } else {
                         stopSound(tone);
-                        $('#' + noteName).removeClass('pressed');
                     }
 
                     tone.isPlaying = !(tone.isPlaying);
@@ -275,7 +273,6 @@
         var stopSound = function(tone) {
             tone.soundLeft.mute();
             tone.soundRight.mute();
-            tone.isPlaying = false;
         };
 
         $(document).ready(function() {
@@ -295,6 +292,7 @@
                 $.each(Cycle.chromatic, function(i, el) {
                     if (el.isPlaying) {
                         stopSound(el);
+                        el.isPlaying = false;
                     }
                 });
             });

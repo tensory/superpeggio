@@ -14,18 +14,18 @@
         Cycle = (function() {
             var cycle = {};
             cycle.chromatic = {
-                'c': 'c',
-                'c-sharp': 'c♯',
-                'd': 'd',
-                'e-flat': 'e♭',
-                'e': 'e',
-                'f': 'f',
-                'f-sharp': 'f♯',
-                'g': 'g',
-                'a-flat': 'a♭',
                 'a': 'a',
+                'e': 'e',
+                'b': 'b',
+                'f-sharp' : 'f♯',
+                'd-flat': 'd♭',
+                'a-flat': 'a♭',
+                'e-flat': 'e♭',
                 'b-flat': 'b♭',
-                'b': 'b'
+                'f': 'f',
+                'c': 'c',
+                'g': 'g',
+                'd': 'd'
             };
 
             cycle.startSound = function(tone) {
@@ -94,9 +94,7 @@
                         });
                     },
                     error: function(jqxhr) {
-                        console.log('how does this work');
-                        console.log(jqxhr);
-
+                        console.log("Couldn't load file:", jqxhr);
                     }
                 })
 

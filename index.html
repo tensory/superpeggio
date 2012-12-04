@@ -127,9 +127,9 @@
 
                 if (tone.soundLeft) {
                     if (tone.isPlaying == false) {
-                        restartSound(tone);
+                        Cycle.restartSound(tone);
                     } else {
-                        stopSound(tone);
+                        Cycle.stopSound(tone);
                     }
 
                     tone.isPlaying = !(tone.isPlaying);
@@ -141,6 +141,16 @@
                 return cycle.chromatic[noteName].symbol;
             };
 
+            cycle.restartSound = function(tone) {
+                tone.soundLeft.unmute();
+                tone.soundRight.unmute();
+                tone.soundLeft.play();
+            };
+
+            cycle.stopSound = function(tone) {
+                tone.soundLeft.mute();
+                tone.soundRight.mute();
+            };
             return cycle;
         })();
 
@@ -264,16 +274,6 @@
             };
         })(jQuery);
 
-        var restartSound = function(tone) {
-            tone.soundLeft.unmute();
-            tone.soundRight.unmute();
-            tone.soundLeft.play();
-        };
-
-        var stopSound = function(tone) {
-            tone.soundLeft.mute();
-            tone.soundRight.mute();
-        };
 
         $(document).ready(function() {
             Wheel.init('wheel');
@@ -291,7 +291,7 @@
                 e.preventDefault();
                 $.each(Cycle.chromatic, function(i, el) {
                     if (el.isPlaying) {
-                        stopSound(el);
+                        Cycle.stopSound(el);
                         el.isPlaying = false;
                     }
                 });

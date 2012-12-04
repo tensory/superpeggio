@@ -142,7 +142,7 @@
 
             // From http://krazydad.com/tutorials/makecolors.php
             hslToColor: function(h, s, l) {
-                return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+                return 'hsla(' + h + ',' + s + '%,' + l + '%, 0.7)';
             },
 
             getColorRainbow: function(size) {
@@ -262,19 +262,29 @@
         });
     </script>
     <style type="text/css">
+        body {
+            font-size: 12px;
+        }
         button {
-            display: block;
-            height: 22px;
-            width: 30px;
+            display: inline-block;
+            height: 40px;
+            width: 50px;
             margin: 0.1em;
+            font-size: 2em;
         }
 
         button.pressed {
             background-color: #CCC;
         }
+
+        h1 {
+            font-family: sans-serif;
+            font-size: 3em;
+        }
     </style>
 </head>
 <body>
+<h1>cranky chord generator makes angry chords :( </h1>
     <canvas id="wheel"></canvas>
 </body>
 

@@ -14,19 +14,36 @@
         Cycle = (function() {
             var cycle = {};
             cycle.chromatic = {
-                'a': 'a',
-                'e': 'e',
-                'b': 'b',
-                'f-sharp' : 'f♯',
-                'd-flat': 'd♭',
-                'a-flat': 'a♭',
-                'e-flat': 'e♭',
-                'b-flat': 'b♭',
-                'f': 'f',
                 'c': 'c',
+                'd-flat': 'd♭',
+                'd': 'd',
+                'e-flat': 'e♭',
+                'e': 'e',
+                'f': 'f',
+                'f-sharp' : 'f♯',
                 'g': 'g',
-                'd': 'd'
+                'a-flat': 'a♭',
+                'a': 'a',
+                'b-flat': 'b♭',
+                'b': 'b'
             };
+
+
+            cycle.fifths = [
+                'a',
+                'e',
+                'b',
+                'f-sharp',
+                'd-flat',
+                'a-flat',
+                'e-flat',
+                'b-flat',
+                'f',
+                'c',
+                'g',
+                'd'
+            ];
+
 
             cycle.startSound = function(tone) {
                 if (cycle.chromatic[tone].soundLeft && cycle.chromatic[tone].soundRight) {

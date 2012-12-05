@@ -48,6 +48,31 @@
             }
         });
 
+        var Scale = function(cycle, name, subtype, type) {
+            this.root = name;
+            this.type = type;
+            this.subtype = subtype || "";
+            this.scale = this.generate(cycle, (subtype + type), name);
+
+            return this;
+        };
+        Scale.prototype.collapse = function () {
+            return this;
+        };
+        // from http://www.thecipher.com/chord-progressions-minor.html
+        Scale.prototype.generate = function(cycle, type, root) {
+            var scale = [];
+            var intervals = {
+                major: [0, 2, 4, 5, 7, 9, 11],
+                naturalminor: [0, 2, 3, 5, 7, 8, 10],
+                harmonicminor: [0, 2, 3, 5, 7, 8, 11],
+                melodicminor: [0, 2, 3, 5, 7, 9, 11]
+            };
+            for (var i = 0; i < 7; i++) {
+                scale[i] = cycle.getAtInterval(root, intervals[type][i]);
+            }
+            return scale;
+        };
 
         Cycle = (function() {
             var cycle = {};
@@ -108,20 +133,7 @@
                 'd'
             ];
 
-            cycle.scales = {
-                major: {}
-            };
-
-            cycle.getScale = function(type, tonic) {
-                var scale = [];
-                var intervals = {
-                    major: [0, 2, 4, 5, 7, 9, 11]
-                };
-                for (var i = 0; i < 7; i++) {
-                    scale[i] = cycle.getAtInterval(tonic, intervals[type][i]);
-                }
-                return scale;
-            };
+            cycle.scales = {};
 
             cycle.startSound = function(tone) {
                 if (cycle.toneMap[tone].soundLeft && cycle.toneMap[tone].soundRight) {
@@ -161,8 +173,6 @@
                     isPlaying: false
                 };
 
-                cycle.scales.major[element] = cycle.getScale('major', element);
-
                 var pathTo = 'files/' + element + '.wav';
                 $.ajax({
                     type: 'GET',
@@ -189,6 +199,13 @@
                                 this.pause();
                             }
                         });
+
+                        // Init scales.
+                        cycle.scales[element + " major"] = new Scale(cycle, element, "", "major").scale;
+                        cycle.scales[element + " natural minor"] = new Scale(cycle, element, "natural", "minor").scale;
+                        cycle.scales[element + " harmonic minor"] = new Scale(cycle, element, "harmonic", "minor").scale
+                        cycle.scales[element + " melodic minor"] = new Scale(cycle, element, "melodic", "minor").scale
+
                     },
                     error: function(jqxhr) {
                         console.log("Couldn't load file:", jqxhr);
@@ -203,7 +220,6 @@
                 if (!tone) {
                     throw "Invalid note in toneMap";
                 }
-                window.console.log(tone.isPlaying);
 
                 if (tone.soundLeft) {
                     if (tone.isPlaying == false) {
@@ -235,7 +251,11 @@
             };
 
             cycle.searchForChords = function() {
+                // Learn currently playing chords
+                $.each(cycle.toneMap, function(i, el) {
+                     /// regexes might be helpful here
 
+                });
             };
             return cycle;
         })();

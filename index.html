@@ -10,7 +10,6 @@
          * add tones an octave above, but do not make them the , so that a
          */
 
-
         $.fn.extend({
             getObjectLength: function(obj) {
                 var size = 0;
@@ -70,7 +69,7 @@
                     window.console.log(keys);
                     return keys[Math.abs(interval) - 1];
                 }
-                
+
                 if (interval + index > keys.length - 1) {
                     interval -= keys.length - index;
                     return keys[interval];
@@ -115,16 +114,13 @@
 
             cycle.getMajorScale = function(tonic) {
                 var scale = [];
-                scale[0] = tonic;
-                scale[1] = cycle.getAtInterval(tonic, 2);
-                scale[2] = cycle.getAtInterval(tonic, 4);
-                scale[3] = cycle.getAtInterval(tonic, 5);
-                scale[3] = cycle.getAtInterval(tonic, -1);
-
+                var intervals = [0, 2, 4, 5, 7, 9, 11];
+                for (var i = 0; i < 7; i++) {
+                    scale[i] = cycle.getAtInterval(tonic, intervals[i]);
+                }
                 return scale;
             };
 
-//            cycle.chromatic
             cycle.startSound = function(tone) {
                 if (cycle.toneMap[tone].soundLeft && cycle.toneMap[tone].soundRight) {
                     cycle.toneMap[tone].soundLeft.bind('timeupdate', function(e) {

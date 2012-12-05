@@ -6,6 +6,27 @@
     <script src="buzz.js"></script>
     <script>
 
+        var CircularLinkedList = function(list) {
+            var links = {};
+            for (var i = 0; i < list.length; i++) {
+                var n, p;
+                n = list[i+1];
+                p = list[i-1];
+
+                if (i == 0) { // deal with beginning and end
+                    p = list[list.length-1];
+                }
+                if (i==(list.length-1)) {
+                    n = list[0];
+                }
+                links[list[i]] = {
+                    next: n,
+                    previous: p
+                }
+            }
+            return links;
+        };
+
         /**
          * todo:
          * add tones an octave above, but do not make them the , so that a
@@ -13,9 +34,14 @@
 
         Cycle = (function() {
             var cycle = {};
-            cycle.chromatic = {
+
+            cycle.chromatic = new CircularLinkedList([
+                'c', 'd-flat', 'd', 'e-flat', 'e', 'f', 'f-sharp', 'g', 'a-flat', 'a', 'b-flat', 'b'
+            ]);
+
+            cycle.toneMap = {
                 'c': 'c',
-                'd-flat': 'd♭',
+                'd-flat': 'c♯',
                 'd': 'd',
                 'e-flat': 'e♭',
                 'e': 'e',
@@ -45,29 +71,31 @@
             ];
 
 
+
+//            cycle.chromatic
             cycle.startSound = function(tone) {
-                if (cycle.chromatic[tone].soundLeft && cycle.chromatic[tone].soundRight) {
-                    cycle.chromatic[tone].soundLeft.bind('timeupdate', function(e) {
+                if (cycle.toneMap[tone].soundLeft && cycle.toneMap[tone].soundRight) {
+                    cycle.toneMap[tone].soundLeft.bind('timeupdate', function(e) {
                         if (this.getTime() > 2.8) {
-                            cycle.chromatic[tone].soundRight.play();
+                            cycle.toneMap[tone].soundRight.play();
                             this.mute();
                         }
                     });
 
-                    cycle.chromatic[tone].soundRight.bind('timeupdate', function(e) {
+                    cycle.toneMap[tone].soundRight.bind('timeupdate', function(e) {
                         if (this.getTime() > 2.8) {
-                            cycle.chromatic[tone].soundLeft.play();
+                            cycle.toneMap[tone].soundLeft.play();
                             this.mute();
                         }
                     });
 
-                    cycle.chromatic[tone].soundLeft.bind('play', function(e) {
+                    cycle.toneMap[tone].soundLeft.bind('play', function(e) {
                         this.unmute();
                     });
 
-                    cycle.chromatic[tone].soundRight.bind('play', function(e) {
+                    cycle.toneMap[tone].soundRight.bind('play', function(e) {
                         this.unmute();
-                        cycle.chromatic[tone].soundLeft.stop();
+                        cycle.toneMap[tone].soundLeft.stop();
                     });
 
                 } else {
@@ -76,9 +104,9 @@
             };
 
             // Initialize Cycle.chromatic
-            $.each(cycle.chromatic, function(element, i) {
-                var symbol = cycle.chromatic[element];
-                cycle.chromatic[element] = {
+            $.each(cycle.toneMap, function(element, i) {
+                var symbol = cycle.toneMap[element];
+                cycle.toneMap[element] = {
                     symbol: symbol,
                     isPlaying: false
                 };
@@ -88,23 +116,23 @@
                     type: 'GET',
                     url: pathTo,
                     success: function() {
-                        cycle.chromatic[element].soundLeft = new buzz.sound(pathTo, { loop: false });
-                        cycle.chromatic[element].soundRight = new buzz.sound(pathTo, { loop: false });
+                        cycle.toneMap[element].soundLeft = new buzz.sound(pathTo, { loop: false });
+                        cycle.toneMap[element].soundRight = new buzz.sound(pathTo, { loop: false });
                         // Hacked "seamless" playback
                         // http://forestmist.org/2010/04/html5-audio-loops/
                         // tl;dr: HTML5 Audio.loop doesn't work seamlessly in any browser.
                         // Two alternating sounds work around the gap.
-                        cycle.chromatic[element].soundLeft.bind('timeupdate', function(e) {
+                        cycle.toneMap[element].soundLeft.bind('timeupdate', function(e) {
                             if (this.getTime() > 2) {
-                                cycle.chromatic[element].soundRight.play();
+                                cycle.toneMap[element].soundRight.play();
                                 this.setTime(0);
                                 this.pause();
                             }
                         });
 
-                        cycle.chromatic[element].soundRight.bind('timeupdate', function(e) {
+                        cycle.toneMap[element].soundRight.bind('timeupdate', function(e) {
                             if (this.getTime() > 2) {
-                                cycle.chromatic[element].soundLeft.play();
+                                cycle.toneMap[element].soundLeft.play();
                                 this.setTime(0);
                                 this.pause();
                             }
@@ -118,7 +146,7 @@
             });
 
             cycle.togglePlay = function(noteName) {
-                var tone = Cycle.chromatic[noteName];
+                var tone = Cycle.toneMap[noteName];
 
                 if (!tone) {
                     return false;
@@ -138,7 +166,7 @@
             };
 
             cycle.getNoteSymbol = function(noteName) {
-                return cycle.chromatic[noteName].symbol;
+                return cycle.toneMap[noteName].symbol;
             };
 
             cycle.restartSound = function(tone) {
@@ -203,7 +231,7 @@
                         DIVIDER_COLOR: '#FFFFFF',
                         COUNTER_CLOCKWISE: false,
                         LABEL_RADIUS: 150,
-                        ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.chromatic) / 2), // One-nth of the circle
+                        ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.toneMap) / 2), // One-nth of the circle
                         SIZE: 400
                     };
 
@@ -222,8 +250,8 @@
                     var ctx = canvas.getContext('2d');
                     var p = properties;
 
-                    if (Cycle.chromatic && colors.length) {
-                        var noteNames = $.fn.getObjectKeys(Cycle.chromatic);
+                    if (Cycle.toneMap && colors.length) {
+                        var noteNames = $.fn.getObjectKeys(Cycle.toneMap);
                         window.console.log(noteNames[2]);
                         $.each(colors, function(i, el) {
                             ctx.beginPath();
@@ -279,7 +307,7 @@
             Wheel.init('wheel');
             // Generate buttons.
 
-            var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.chromatic));
+            var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.toneMap));
 
             $('.note-name').live('click', function(e) {
                 e.preventDefault();
@@ -289,7 +317,7 @@
 
             $('#kill').click(function(e) {
                 e.preventDefault();
-                $.each(Cycle.chromatic, function(i, el) {
+                $.each(Cycle.toneMap, function(i, el) {
                     if (el.isPlaying) {
                         Cycle.stopSound(el);
                         el.isPlaying = false;

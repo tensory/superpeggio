@@ -201,7 +201,7 @@
                 var tone = Cycle.toneMap[noteName];
 
                 if (!tone) {
-                    return false;
+                    throw "Invalid note in toneMap";
                 }
                 window.console.log(tone.isPlaying);
 
@@ -213,8 +213,10 @@
                     }
 
                     tone.isPlaying = !(tone.isPlaying);
+
+
                 }
-                return true;
+                cycle.searchForChords();
             };
 
             cycle.getNoteSymbol = function(noteName) {
@@ -230,6 +232,10 @@
             cycle.stopSound = function(tone) {
                 tone.soundLeft.mute();
                 tone.soundRight.mute();
+            };
+
+            cycle.searchForChords = function() {
+
             };
             return cycle;
         })();

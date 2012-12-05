@@ -65,6 +65,12 @@
                     interval = keys.length % interval;
                 }
 
+                if (interval < 0 && index == 0) {
+                    keys = keys.reverse();
+                    window.console.log(keys);
+                    return keys[Math.abs(interval) - 1];
+                }
+                
                 if (interval + index > keys.length - 1) {
                     interval -= keys.length - index;
                     return keys[interval];

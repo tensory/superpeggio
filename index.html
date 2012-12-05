@@ -5,39 +5,72 @@
     <script src="jquery-1.8.3.min.js"></script>
     <script src="buzz.js"></script>
     <script>
-
-        var CircularLinkedList = function(list) {
-            var links = {};
-            for (var i = 0; i < list.length; i++) {
-                var n, p;
-                n = list[i+1];
-                p = list[i-1];
-
-                if (i == 0) { // deal with beginning and end
-                    p = list[list.length-1];
-                }
-                if (i==(list.length-1)) {
-                    n = list[0];
-                }
-                links[list[i]] = {
-                    next: n,
-                    previous: p
-                }
-            }
-            return links;
-        };
-
         /**
          * todo:
          * add tones an octave above, but do not make them the , so that a
          */
 
+
+        $.fn.extend({
+            getObjectLength: function(obj) {
+                var size = 0;
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        size++;
+                    }
+                }
+                return size;
+            },
+
+            getObjectKeys: function(obj) {
+                var result = [];
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        result.push(key);
+                    }
+                }
+                return result;
+            },
+            // From http://krazydad.com/tutorials/makecolors.php
+            hslToColor: function(h, s, l) {
+                return 'hsla(' + h + ',' + s + '%,' + l + '%, 0.7)';
+            },
+
+            getColorRainbow: function(size) {
+                var limit = 360; // degrees of HSL values
+                var cycle = limit/(size);
+                var saturation = 80, light = 50;
+                var colors = [];
+
+                for (var i = 0; i < size; i++) {
+                    colors.push($.fn.hslToColor(Math.floor(cycle * i), saturation, light));
+                }
+                return colors;
+            }
+        });
+
+
         Cycle = (function() {
             var cycle = {};
 
-            cycle.chromatic = new CircularLinkedList([
-                'c', 'd-flat', 'd', 'e-flat', 'e', 'f', 'f-sharp', 'g', 'a-flat', 'a', 'b-flat', 'b'
-            ]);
+            cycle.getAtInterval = function(root, interval) {
+                var keys = $.fn.getObjectKeys(cycle.toneMap),
+                        index = keys.indexOf(root);
+
+                if (index == -1) {
+                    throw "Unknown chromatic root";
+                }
+
+                if (interval > keys.length) {
+                    interval = keys.length % interval;
+                }
+
+                if (interval + index > keys.length - 1) {
+                    interval -= keys.length - index;
+                    return keys[interval];
+                }
+                return keys[index + interval];
+            };
 
             cycle.toneMap = {
                 'c': 'c',
@@ -70,7 +103,20 @@
                 'd'
             ];
 
+            cycle.scales = {
+                major: {}
+            };
 
+            cycle.getMajorScale = function(tonic) {
+                var scale = [];
+                scale[0] = tonic;
+                scale[1] = cycle.getAtInterval(tonic, 2);
+                scale[2] = cycle.getAtInterval(tonic, 4);
+                scale[3] = cycle.getAtInterval(tonic, 5);
+                scale[3] = cycle.getAtInterval(tonic, -1);
+
+                return scale;
+            };
 
 //            cycle.chromatic
             cycle.startSound = function(tone) {
@@ -99,17 +145,19 @@
                     });
 
                 } else {
-                    throw new Exception('Sounds are not ready');
+                    throw "Sounds are not ready";
                 }
             };
 
-            // Initialize Cycle.chromatic
+            // Initialize Cycle.chromatic and the scales
             $.each(cycle.toneMap, function(element, i) {
                 var symbol = cycle.toneMap[element];
                 cycle.toneMap[element] = {
                     symbol: symbol,
                     isPlaying: false
                 };
+
+                cycle.scales.major[element] = cycle.getMajorScale(element);
 
                 var pathTo = 'files/' + element + '.wav';
                 $.ajax({
@@ -182,45 +230,6 @@
             return cycle;
         })();
 
-
-        $.fn.extend({
-             getObjectLength: function(obj) {
-                 var size = 0;
-                 for (var key in obj) {
-                     if (obj.hasOwnProperty(key)) {
-                         size++;
-                     }
-                 }
-                 return size;
-             },
-
-            getObjectKeys: function(obj) {
-                var result = [];
-                for (var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        result.push(key);
-                    }
-                }
-                return result;
-            },
-            // From http://krazydad.com/tutorials/makecolors.php
-            hslToColor: function(h, s, l) {
-                return 'hsla(' + h + ',' + s + '%,' + l + '%, 0.7)';
-            },
-
-            getColorRainbow: function(size) {
-                var limit = 360; // degrees of HSL values
-                var cycle = limit/(size);
-                var saturation = 80, light = 50;
-                var colors = [];
-
-                for (var i = 0; i < size; i++) {
-                    colors.push($.fn.hslToColor(Math.floor(cycle * i), saturation, light));
-                }
-                return colors;
-            }
-        });
-
         Wheel = (function($) {
             var canvas,
                     properties = {
@@ -252,7 +261,6 @@
 
                     if (Cycle.toneMap && colors.length) {
                         var noteNames = $.fn.getObjectKeys(Cycle.toneMap);
-                        window.console.log(noteNames[2]);
                         $.each(colors, function(i, el) {
                             ctx.beginPath();
                             var begin = p.ARC_LENGTH * i - (p.ARC_LENGTH/2);
@@ -295,7 +303,7 @@
 
 
                     } else {
-                        throw RangeException("No color array defined");
+                        throw "No color array defined";
                     }
 
                 }

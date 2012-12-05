@@ -112,11 +112,13 @@
                 major: {}
             };
 
-            cycle.getMajorScale = function(tonic) {
+            cycle.getScale = function(type, tonic) {
                 var scale = [];
-                var intervals = [0, 2, 4, 5, 7, 9, 11];
+                var intervals = {
+                    major: [0, 2, 4, 5, 7, 9, 11]
+                };
                 for (var i = 0; i < 7; i++) {
-                    scale[i] = cycle.getAtInterval(tonic, intervals[i]);
+                    scale[i] = cycle.getAtInterval(tonic, intervals[type][i]);
                 }
                 return scale;
             };
@@ -159,7 +161,7 @@
                     isPlaying: false
                 };
 
-                cycle.scales.major[element] = cycle.getMajorScale(element);
+                cycle.scales.major[element] = cycle.getScale('major', element);
 
                 var pathTo = 'files/' + element + '.wav';
                 $.ajax({

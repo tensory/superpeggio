@@ -77,16 +77,7 @@
 
         Cycle = (function() {
             var cycle = {};
-            cycle.currentlyPlaying = (function() {
-                var active = [];
-                return {
-                    // Create a function that toggles a value's presence in 'on"
-                    // and runs a callback function when that is updated.
-                    update: function(noteName, callback) {
-                        //
-                    }
-                };
-            })();
+
             cycle.getAtInterval = function(root, interval) {
                 var keys = $.fn.getObjectKeys(cycle.toneMap),
                         index = keys.indexOf(root);
@@ -266,6 +257,8 @@
                      /// regexes might be helpful here
 
                 });
+
+                $('#results').text("That doesn't match anything");
             };
             return cycle;
         })();
@@ -427,6 +420,10 @@
     <canvas id="wheel"></canvas>
     <div id="buttons"></div>
     <button id="kill">hush</button>
+
+    <div id="results">
+
+    </div>
 </div>
 </body>
 </html>

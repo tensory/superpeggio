@@ -118,23 +118,21 @@
                 'b': 'b'
             };
 
+            cycle.audible = function() {
+                var active = [];
+                // Determine what's playing, if anything
+                for (var noteName in cycle.toneMap) {
+                    if (cycle.toneMap[noteName].isPlaying) {
+                        active.push(noteName);
+                    }
+                }
+                return active;
+            };
 
-            cycle.fifths = [
-                'a',
-                'e',
-                'b',
-                'f-sharp',
-                'd-flat',
-                'a-flat',
-                'e-flat',
-                'b-flat',
-                'f',
-                'c',
-                'g',
-                'd'
-            ];
-
-            cycle.scales = {};
+            cycle.scales = {
+                scales: {},
+                memberships: {}
+            };
 
             cycle.startSound = function(tone) {
                 if (cycle.toneMap[tone].soundLeft && cycle.toneMap[tone].soundRight) {
@@ -202,10 +200,15 @@
                         });
 
                         // Init scales.
-                        cycle.scales[element + " major"] = new Scale(cycle, element, "", "major").scale;
-                        cycle.scales[element + " natural minor"] = new Scale(cycle, element, "natural", "minor").scale;
-                        cycle.scales[element + " harmonic minor"] = new Scale(cycle, element, "harmonic", "minor").scale
-                        cycle.scales[element + " melodic minor"] = new Scale(cycle, element, "melodic", "minor").scale
+                        cycle.scales.scales[element + " major"] = new Scale(cycle, element, "", "major").scale;
+
+                        // Determine scale membership here
+
+                        cycle.scales.scales[element + " natural minor"] = new Scale(cycle, element, "natural", "minor").scale;
+                        cycle.scales.scales[element + " harmonic minor"] = new Scale(cycle, element, "harmonic", "minor").scale
+                        cycle.scales.scales[element + " melodic minor"] = new Scale(cycle, element, "melodic", "minor").scale
+
+
 
                     },
                     error: function(jqxhr) {
@@ -230,10 +233,8 @@
                     }
 
                     tone.isPlaying = !(tone.isPlaying);
-
-
                 }
-                cycle.searchForChords();
+                cycle.searchForScales();
             };
 
             cycle.getNoteSymbol = function(noteName) {
@@ -251,14 +252,35 @@
                 tone.soundRight.mute();
             };
 
-            cycle.searchForChords = function() {
-                // Learn currently playing chords
-                $.each(cycle.toneMap, function(i, el) {
-                     /// regexes might be helpful here
+            cycle.searchForScales = function() {
+                if (!(cycle.scales.scales.length)) {
+                    throw "Scales were not initialized";
+                }
 
-                });
+                var matches = [];
 
-                $('#results').text("That doesn't match anything");
+                var playing = cycle.audible();
+                if (playing.length > 0) {
+                    /*
+                    // Something is playing... look for scales that it's in
+                    // getMatchingScales
+                    // Start searching through each scale
+                    for (var scale in cycle.scales) {
+                        window.console.log(cycle.scales);
+
+                        for (var key in playing) {
+                            if key
+                        }
+
+                        if (matches.length > 0) {
+
+
+                        } else {
+                            $('#results').text("That doesn't match anything");
+                        }
+                    }
+                        */
+                }
             };
             return cycle;
         })();

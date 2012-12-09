@@ -7,7 +7,8 @@
     <script>
         /**
          * todo:
-         * add tones an octave above, but do not make them the , so that a
+         * add tones an octave above, but do not make them the tonic
+         * why? to sound good if chosen last.
          */
 
         $.fn.extend({
@@ -76,7 +77,16 @@
 
         Cycle = (function() {
             var cycle = {};
-
+            cycle.currentlyPlaying = (function() {
+                var active = [];
+                return {
+                    // Create a function that toggles a value's presence in 'on"
+                    // and runs a callback function when that is updated.
+                    update: function(noteName, callback) {
+                        //
+                    }
+                };
+            })();
             cycle.getAtInterval = function(root, interval) {
                 var keys = $.fn.getObjectKeys(cycle.toneMap),
                         index = keys.indexOf(root);
@@ -412,7 +422,7 @@
     </style>
 </head>
 <body>
-<h1>cranky chord generator makes angry chords :( </h1>
+<h1>cranky scale generator makes angry scales :( </h1>
 <div id="container" style="position: relative;">
     <canvas id="wheel"></canvas>
     <div id="buttons"></div>

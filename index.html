@@ -266,30 +266,22 @@
                 tone.soundRight.mute();
             };
 
-
-
             cycle.searchForScales = function() {
-                var candidates = $.fn.getObjectKeys(cycle.scales);
-                if (!(candidates.length)) {
+                var activeScaleRelationships = [];
+                if (!(_.keys(cycle.toneMap).length)) {
                     throw "Scales were not initialized";
                 }
-                $.each(cycle.toneMap, function(i, el) {
-                    window.console.log(el);
-                    /*
-                    if (!(cycle.toneMap[el].inScales.length)) {
-                        throw "Scale relationships are not defined";
-                    }*/
-                });
 
-                window.console.log(candidates);
-                window.console.log(_.intersect(candidates, []));
                 var playing = cycle.audible();
                 if (playing.length > 0) {
-                    // Something is playing... look for scales that all playing notes are in
-                    for (var tone in playing) {
-                        _.intersect(candidates, cycle.toneMap[playing[tone]].inScales);
+                    // Something is playing... look for scales that all playing notes are within
+                    for (var toneIndex in playing) {
+                        var scalesContainingCurrentKey = _.keys(cycle.toneMap[playing[toneIndex]].inScales);
+                        activeScaleRelationships.push(scalesContainingCurrentKey);
                     }
-                    window.console.log("these are the winners:", candidates);
+
+                    // Find the intersection of all scales associated with the currently playing notes.
+                    var result = _.intersect.apply(this, activeScaleRelationships);
                 }
             };
             return cycle;
@@ -378,7 +370,6 @@
 
         $(document).ready(function() {
             Wheel.init('wheel');
-            window.console.log(Cycle.toneMap);
 
             var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.toneMap));
 

@@ -33,6 +33,13 @@
 
             capitalize : function(string) {
                 return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+            },
+
+            resetView: function() {
+                $('#current').html('');
+                $('#scales').html('');
+                $('.message').hide();
+                $('#kill').attr('disabled', 'disabled');
             }
         });
 
@@ -222,10 +229,15 @@
                 var scales;
 
                 $('#current').text(searchResults.playing.join(', '));
-
-                if (searchResults.related.length == 0) {
-                    $('.message').show();
+                if (searchResults.playing.length > 0) {
+                    $('#kill').removeAttr('disabled');
+                } else {
+                    $('#kill').attr('disabled', 'disabled');
                     $('#scales').html('');
+                }
+
+                if (searchResults.playing.length > 0 && searchResults.related.length == 0) {
+                    $('.message').show();
                 } else {
                     $('.message').hide();
                     if (searchResults.playing.length > 2) {
@@ -388,11 +400,6 @@
             Wheel.init('wheel');
 
             var colors = $.fn.getColorRainbow(_.size(Cycle.toneMap));
-            function resetView() {
-                $('#current').html('');
-                $('#scales').html('');
-                $('.message').hide();
-            };
 
             $('.note-name').live('click', function(e) {
                 e.preventDefault();
@@ -409,7 +416,7 @@
                     }
                 });
 
-                resetView();
+                $.fn.resetView();
             });
 
             Wheel.draw(colors);
@@ -452,11 +459,10 @@
 
         button#kill {
             height: 40px;
-            margin: 0.1em;
             font-size: 2em;
             width: auto;
             display: block;
-            margin: 0 auto;
+            margin: 0 auto 1.2em;
         }
 
         h1 {
@@ -486,6 +492,9 @@
 
         #lolwut {
             clear: both;
+            background-color: #EFEFEF;
+            padding: 0.8em 1.6em;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -494,7 +503,7 @@
 <div id="container" style="position: relative;">
     <canvas id="wheel"></canvas>
     <div id="buttons"></div>
-    <button id="kill">hush</button>
+    <button id="kill" disabled="disabled">hush</button>
 </div>
 <div id="results">
     <div id="current"></div>

@@ -29,6 +29,10 @@
                     colors.push($.fn.hslToColor(Math.floor(cycle * i), saturation, light));
                 }
                 return colors;
+            },
+
+            capitalize : function(string) {
+                return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
             }
         });
 
@@ -215,8 +219,24 @@
 
             cycle.doRender = function() {
                 var searchResults = cycle.searchForScales();
+                var scales;
 
                 $('#current').text(searchResults.playing.join(', '));
+
+                if (searchResults.related.length == 0) {
+                    $('.message').show();
+                    $('#scales').html('');
+                } else {
+                    $('.message').hide();
+                    if (searchResults.playing.length > 2) {
+                        var scales = '<ul>';
+                        $.each(searchResults.related, function(index, e) {
+                            scales += '<li>' + $.fn.capitalize(e) + '</li>';
+                        });
+                        scales += '</ul>';
+                        $('#scales').html(scales);
+                    }
+                }
             };
 
             cycle.togglePlay = function(noteName) {
@@ -368,10 +388,14 @@
             Wheel.init('wheel');
 
             var colors = $.fn.getColorRainbow(_.size(Cycle.toneMap));
+            function resetView() {
+                $('#current').html('');
+                $('#scales').html('');
+                $('.message').hide();
+            };
 
             $('.note-name').live('click', function(e) {
                 e.preventDefault();
-                window.console.log('yay');
                 Cycle.togglePlay($(this).attr('id'));
             });
 
@@ -384,6 +408,8 @@
                         $('#' + i).removeClass('pressed');
                     }
                 });
+
+                resetView();
             });
 
             Wheel.draw(colors);
@@ -392,6 +418,10 @@
     <style type="text/css">
         body {
             font-size: 12px;
+        }
+
+        .message {
+            display: none;
         }
 
         .note-name {
@@ -450,10 +480,13 @@
     <canvas id="wheel"></canvas>
     <div id="buttons"></div>
     <button id="kill">hush</button>
-
-    <div id="results">
-        <div id="current"></div>
-        <div id="related"></div>
+</div>
+<div id="results">
+    <div id="current"></div>
+    <div id="related">
+        <div class="message">There are no scales like that.</div>
+        <div id="scales">
+        </div>
     </div>
 </div>
 </body>

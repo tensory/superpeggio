@@ -14,16 +14,6 @@
          */
 
         $.fn.extend({
-            getObjectLength: function(obj) {
-                var size = 0;
-                for (var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        size++;
-                    }
-                }
-                return size;
-            },
-
             // From http://krazydad.com/tutorials/makecolors.php
             hslToColor: function(h, s, l) {
                 return 'hsla(' + h + ',' + s + '%,' + l + '%, 0.7)';
@@ -288,7 +278,7 @@
                         DIVIDER_COLOR: '#FFFFFF',
                         COUNTER_CLOCKWISE: false,
                         LABEL_RADIUS: 150,
-                        ARC_LENGTH: Math.PI / ($.fn.getObjectLength(Cycle.toneMap) / 2), // One-nth of the circle
+                        ARC_LENGTH: Math.PI / (_.size(Cycle.toneMap) / 2), // One-nth of the circle
                         SIZE: 400
                     };
 
@@ -362,7 +352,7 @@
         $(document).ready(function() {
             Wheel.init('wheel');
 
-            var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.toneMap));
+            var colors = $.fn.getColorRainbow(_.size(Cycle.toneMap));
 
             $('.note-name').live('click', function(e) {
                 e.preventDefault();

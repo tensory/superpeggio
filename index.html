@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <script src="jquery-1.8.3.min.js"></script>
+    <script src="underscore-min.js"></script>
     <script src="buzz.js"></script>
     <script>
+
         /**
          * todo:
          * add tones an octave above, but do not make them the tonic
@@ -49,13 +51,15 @@
             }
         });
 
-        var Scale = function(cycle, name, subtype, type) {
-            this.root = name;
+        var Scale = function(cycle, root, subtype, type) {
+            this.root = root;
             this.type = type;
             this.subtype = subtype || "";
-            this.scale = this.generate(cycle, (subtype + type), name);
-
+            this.scale = this.generate(cycle, (subtype + type), root);
             return this;
+        };
+        Scale.prototype.getFullName = function() {
+            return this.root + " " + ((this.subtype.length > 0) ? this.subtype + " " : "") + this.type;
         };
         Scale.prototype.collapse = function () {
             return this;
@@ -92,7 +96,6 @@
 
                 if (interval < 0 && index == 0) {
                     keys = keys.reverse();
-                    window.console.log(keys);
                     return keys[Math.abs(interval) - 1];
                 }
 
@@ -130,8 +133,6 @@
             };
 
             cycle.scales = {
-                scales: {},
-                memberships: {}
             };
 
             cycle.startSound = function(tone) {
@@ -164,14 +165,17 @@
                 }
             };
 
-            // Initialize Cycle.chromatic and the scales
-            $.each(cycle.toneMap, function(element, i) {
-                var symbol = cycle.toneMap[element];
-                cycle.toneMap[element] = {
+            // Initialize Cycle.toneMap and the scales
+            $.each(cycle.toneMap, function(el, i) {
+                var symbol = cycle.toneMap[el];
+                cycle.toneMap[el] = {
                     symbol: symbol,
-                    isPlaying: false
+                    isPlaying: false,
+                    inScales: {}
                 };
+            });
 
+            $.each(cycle.toneMap, function(element, i) {
                 var pathTo = 'files/' + element + '.wav';
                 $.ajax({
                     type: 'GET',
@@ -200,23 +204,33 @@
                         });
 
                         // Init scales.
-                        cycle.scales.scales[element + " major"] = new Scale(cycle, element, "", "major").scale;
+                        var major = new Scale(cycle, element, "", "major");
+                        cycle.associate(major);
 
-                        // Determine scale membership here
+                        var naturalMinor = new Scale(cycle, element, "natural", "minor");
+                        cycle.associate(naturalMinor);
 
-                        cycle.scales.scales[element + " natural minor"] = new Scale(cycle, element, "natural", "minor").scale;
-                        cycle.scales.scales[element + " harmonic minor"] = new Scale(cycle, element, "harmonic", "minor").scale
-                        cycle.scales.scales[element + " melodic minor"] = new Scale(cycle, element, "melodic", "minor").scale
+                        var harmonicMinor = new Scale(cycle, element, "harmonic", "minor");
+                        cycle.associate(harmonicMinor);
 
-
-
+                        var melodicMinor = new Scale(cycle, element, "melodic", "minor");
+                        cycle.associate(melodicMinor);
                     },
                     error: function(jqxhr) {
                         console.log("Couldn't load file:", jqxhr);
                     }
-                })
-
+                });
             });
+
+            cycle.associate = function(myScale) {
+                var name = myScale.getFullName();
+                cycle.scales[name] = myScale.scale; // Set the scale in cycle.scales
+
+                // Set the relationships that this scale has with all the scale roots
+                $.each(myScale.scale, function(i, el) {
+                    cycle.toneMap[el].inScales[name] = name;
+                });
+            };
 
             cycle.togglePlay = function(noteName) {
                 var tone = Cycle.toneMap[noteName];
@@ -252,34 +266,30 @@
                 tone.soundRight.mute();
             };
 
+
+
             cycle.searchForScales = function() {
-                if (!(cycle.scales.scales.length)) {
+                var candidates = $.fn.getObjectKeys(cycle.scales);
+                if (!(candidates.length)) {
                     throw "Scales were not initialized";
                 }
+                $.each(cycle.toneMap, function(i, el) {
+                    window.console.log(el);
+                    /*
+                    if (!(cycle.toneMap[el].inScales.length)) {
+                        throw "Scale relationships are not defined";
+                    }*/
+                });
 
-                var matches = [];
-
+                window.console.log(candidates);
+                window.console.log(_.intersect(candidates, []));
                 var playing = cycle.audible();
                 if (playing.length > 0) {
-                    /*
-                    // Something is playing... look for scales that it's in
-                    // getMatchingScales
-                    // Start searching through each scale
-                    for (var scale in cycle.scales) {
-                        window.console.log(cycle.scales);
-
-                        for (var key in playing) {
-                            if key
-                        }
-
-                        if (matches.length > 0) {
-
-
-                        } else {
-                            $('#results').text("That doesn't match anything");
-                        }
+                    // Something is playing... look for scales that all playing notes are in
+                    for (var tone in playing) {
+                        _.intersect(candidates, cycle.toneMap[playing[tone]].inScales);
                     }
-                        */
+                    window.console.log("these are the winners:", candidates);
                 }
             };
             return cycle;
@@ -368,7 +378,7 @@
 
         $(document).ready(function() {
             Wheel.init('wheel');
-            // Generate buttons.
+            window.console.log(Cycle.toneMap);
 
             var colors = $.fn.getColorRainbow($.fn.getObjectLength(Cycle.toneMap));
 

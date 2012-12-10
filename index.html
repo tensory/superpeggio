@@ -24,15 +24,6 @@
                 return size;
             },
 
-            getObjectKeys: function(obj) {
-                var result = [];
-                for (var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        result.push(key);
-                    }
-                }
-                return result;
-            },
             // From http://krazydad.com/tutorials/makecolors.php
             hslToColor: function(h, s, l) {
                 return 'hsla(' + h + ',' + s + '%,' + l + '%, 0.7)';
@@ -83,7 +74,7 @@
             var cycle = {};
 
             cycle.getAtInterval = function(root, interval) {
-                var keys = $.fn.getObjectKeys(cycle.toneMap),
+                var keys = _.keys(cycle.toneMap),
                         index = keys.indexOf(root);
 
                 if (index == -1) {
@@ -317,7 +308,7 @@
                     var p = properties;
 
                     if (Cycle.toneMap && colors.length) {
-                        var noteNames = $.fn.getObjectKeys(Cycle.toneMap);
+                        var noteNames = _.keys(Cycle.toneMap);
                         $.each(colors, function(i, el) {
                             ctx.beginPath();
                             var begin = p.ARC_LENGTH * i - (p.ARC_LENGTH/2);
@@ -445,7 +436,6 @@
     <button id="kill">hush</button>
 
     <div id="results">
-
     </div>
 </div>
 </body>

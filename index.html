@@ -481,6 +481,18 @@
             font-size: 3em;
         }
 
+        #lolwut a, #colophon a {
+            color: #666666;
+        }
+
+        #lolwut a:hover {
+            color: #FA560A;
+        }
+
+        #colophon a:hover {
+            color: #999;
+        }
+
         #buttons {
             position: absolute;
             left: 200px;
@@ -523,6 +535,13 @@
             padding: 0.8em 1.6em;
             border-radius: 12px;
         }
+
+        #colophon {
+            text-align: center;
+            margin: 1.8em 0;
+            font-size: 0.8em;
+            color: #AAAAAA;
+        }
     </style>
 </head>
 <body>
@@ -536,6 +555,7 @@
 <div id="results">
     <div id="current"></div>
     <div id="related">
+        <div class="message troll">Oww, that hurts!!</div>
         <div class="message none">That's not part of any scale :(</div>
         <div class="message memberships">These will make</div>
         <div id="scales">
@@ -546,10 +566,10 @@
     <h2>What's this, then?</h2>
     <p>Click a few notes to learn the musical scales they produce.</p>
     <p>It is <strong>not</strong> a <a href="http://en.wikipedia.org/wiki/Circle_of_fifths">circle of fifths</a>. It's just the chromatic sequence. It'll tell you the keys that you can build with a handful of notes, but this doesn't give you any of the extra clues about key signature or interval that you get from the traditional circle. I'm using <a href="http://www.circle-of-fifths.net/learn.html" target="_blank">Jan's Circle of Fifths</a> (Flash) to teach myself how that all works.</p>
-    <p>The Cranky Scale Generator supports the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
-    <p>If you have any suggestions for making this better, you could <a href="/">email me</a>, but it would be so much cooler if you sent me a pull request on <a href="https://github.com/tensory/Fifth">Github</a>.</p>
+    <p>The cranky scale generator knows about the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
+    <p>If you have any suggestions for making this better, you could <a href="http://www.arilacenski.com/about/">email me</a>, but it would be so much cooler if you sent me a pull request on <a href="https://github.com/tensory/Fifth">Github</a>.</p>
 </div>
-<div id="colophon">CC-BY-SA <a href>Ari Lacenski</a></div>
+<div id="colophon">CC-BY-SA <a href="http://www.arilacenski.com">Ari Lacenski</a> in late 2012 | Written in JavaScript and HTML5</div>
 </div>
 </body>
 </html>

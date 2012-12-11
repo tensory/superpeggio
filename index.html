@@ -236,8 +236,14 @@
                     $('#scales').html('');
                 }
 
-                if (searchResults.playing.length > 0 && searchResults.related.length == 0) {
-                    $('.message').show();
+                if (searchResults.playing.length == _.keys(cycle.toneMap).length) {
+                    $('.message').hide();
+                    $('.troll').show();
+                } else if (searchResults.playing.length > 0 && searchResults.related.length == 0) {
+                    $('.none').show();
+                    $('.memberships').hide();
+                    $('.troll').hide();
+                    $('#scales').hide();
                 } else {
                     $('.message').hide();
                     if (searchResults.playing.length > 2) {
@@ -246,7 +252,8 @@
                             scales += '<li>' + $.fn.capitalize(e) + '</li>';
                         });
                         scales += '</ul>';
-                        $('#scales').html(scales);
+                        $('.memberships').show();
+                        $('#scales').html(scales).show();
                     }
                 }
             };
@@ -428,6 +435,11 @@
             font-family: sans-serif;
         }
 
+        #wrap {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         .message {
             display: none;
         }
@@ -490,6 +502,21 @@
             margin-left: 420px;
         }
 
+        #related {
+            font-size: 1.2em;
+            margin-top: 0.8em;
+        }
+
+        #scales ul {
+            list-style-type: none;
+            padding-left: 1.6em;
+            margin-top: 0.2em;
+        }
+
+        #scales ul li {
+            padding: 0.1em 0;
+        }
+
         #lolwut {
             clear: both;
             background-color: #EFEFEF;
@@ -499,6 +526,7 @@
     </style>
 </head>
 <body>
+<div id="wrap">
 <h1>cranky scale generator makes angry scales</h1>
 <div id="container" style="position: relative;">
     <canvas id="wheel"></canvas>
@@ -509,6 +537,7 @@
     <div id="current"></div>
     <div id="related">
         <div class="message none">That's not part of any scale :(</div>
+        <div class="message memberships">These will make</div>
         <div id="scales">
         </div>
     </div>
@@ -518,7 +547,8 @@
     <p>Click a few notes to learn the musical scales they produce.</p>
     <p>It is <strong>not</strong> a <a href="http://en.wikipedia.org/wiki/Circle_of_fifths">circle of fifths</a>. It's just the chromatic sequence. It'll tell you the keys that you can build with a handful of notes, but this doesn't give you any of the extra clues about key signature or interval that you get from the traditional circle. I'm using <a href="http://www.circle-of-fifths.net/learn.html" target="_blank">Jan's Circle of Fifths</a> (Flash) to teach myself how that all works.</p>
     <p>The Cranky Scale Generator supports the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
-    <p>If you have any suggestions for making this better, you could <a href="/">email me</a>, but it would be so much cooler if you <a href="https://github.com/tensory/Fifth">contributed on Github</a>.</p>
+    <p>If you have any suggestions for making this better, you could <a href="/">email me</a>, but it would be so much cooler if you sent me a pull request on <a href="https://github.com/tensory/Fifth">Github</a>.</p>
+</div>
 </div>
 </body>
 </html>

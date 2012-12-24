@@ -36,10 +36,15 @@
             },
 
             resetView: function() {
+                $('.message').hide();
                 $('#current').html('');
                 $('#scales').html('');
-                $('.message').hide();
+                $('#scale').html('');
                 $('#kill').attr('disabled', 'disabled');
+            },
+
+            drawScale: function(keyName, notes) {
+                $('#scale').html(notes.join(' '));
             }
         });
 
@@ -71,8 +76,27 @@
             return scale;
         };
 
+        Staff = (function() {
+             return {
+                 draw: function(id) {
+                     var canvas = document.getElementById(id);
+                     var ctx = canvas.getContext('2d');
+                     var clef = new Image();
+                     var imageObj = new Image();
+
+                     clef.onload = function() {
+                         ctx.drawImage(clef, 0, 0);
+                     };
+                     clef.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
+                 }
+             }
+        })();
         Cycle = (function() {
             var cycle = {};
+
+            cycle.drawScale = function(keyName) {
+                $.fn.drawScale(keyName, this.scales[keyName]);
+            };
 
             cycle.getAtInterval = function(root, interval) {
                 var keys = _.keys(cycle.toneMap),
@@ -249,7 +273,7 @@
                     if (searchResults.playing.length > 2) {
                         var scales = '<ul>';
                         $.each(searchResults.related, function(index, e) {
-                            scales += '<li>' + $.fn.capitalize(e) + '</li>';
+                            scales += '<li><a href="#" class="key-name" data-key-name="' + e + '">' + $.fn.capitalize(e) + '</a></li>';
                         });
                         scales += '</ul>';
                         $('.memberships').show();
@@ -413,6 +437,11 @@
                 Cycle.togglePlay($(this).attr('id'));
             });
 
+            $('a.key-name').live('click', function(e) {
+                e.preventDefault();
+                Cycle.drawScale($(this).attr('data-key-name'));
+            });
+
             $('#kill').click(function(e) {
                 e.preventDefault();
                 $.each(Cycle.toneMap, function(i, el) {
@@ -542,6 +571,10 @@
             font-size: 0.8em;
             color: #AAAAAA;
         }
+
+        #graphic {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -560,8 +593,10 @@
         <div class="message memberships">These will make</div>
         <div id="scales">
         </div>
+        <div id="scale">
+        </div>
     </div>
-    <div id="graphic"></div>
+    <canvas id="graphic"></canvas>
 </div>
 <div id="lolwut">
     <h2>What's this, then?</h2>

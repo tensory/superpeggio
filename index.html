@@ -37,14 +37,14 @@
 
             resetView: function() {
                 $('.message').hide();
+                $('#scale').hide();
                 $('#current').html('');
                 $('#scales').html('');
-                $('#scale').html('');
                 $('#kill').attr('disabled', 'disabled');
             },
 
             drawScale: function(keyName, notes) {
-                $('#scale').html(notes.join(' '));
+                $('#scale').show();
             }
         });
 
@@ -85,10 +85,34 @@
                      var imageObj = new Image();
 
                      clef.onload = function() {
-                         ctx.drawImage(clef, 0, 0);
+                         var lineScale = 15;
+                         var vOffset = 10;
+
+                         for (var i = 0; i < 5; i++) {
+                             ctx.beginPath();
+                             ctx.strokeStyle = '#000000';
+                             ctx.lineWidth = 0.5;
+                             ctx.moveTo(0, i * lineScale + vOffset);
+                             ctx.lineTo(canvas.width, i * lineScale + vOffset);
+                             ctx.stroke();
+                             ctx.closePath();
+                         }
+
+                         var scaling = Staff.scaleVector(clef, 35);
+                         window.console.log(scaling);
+                         ctx.drawImage(clef, 0, 0, scaling.width, scaling.height);
                      };
-                     clef.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
-                 }
+                     clef.src = 'svg/g_clef.svg';
+                 },
+                 scaleVector: function(img, width) {
+                     // Get scaling for an svg image based on a desired width
+                     var aspect = (img.height / img.width);
+
+                     return {
+                         width: width,
+                         height: width * aspect
+                     };
+                }
              }
         })();
         Cycle = (function() {
@@ -429,6 +453,7 @@
 
         $(document).ready(function() {
             Wheel.init('wheel');
+            Staff.draw('scale');
 
             var colors = $.fn.getColorRainbow(_.size(Cycle.toneMap));
 
@@ -548,6 +573,11 @@
             margin-top: 0.8em;
         }
 
+        #scale {
+            display: none;
+            width: 250px;
+        }
+
         #scales ul {
             list-style-type: none;
             padding-left: 1.6em;
@@ -593,8 +623,7 @@
         <div class="message memberships">These will make</div>
         <div id="scales">
         </div>
-        <div id="scale">
-        </div>
+        <canvas id="scale"></canvas>
     </div>
     <canvas id="graphic"></canvas>
 </div>

@@ -44,6 +44,7 @@
             },
 
             drawScale: function(keyName, notes) {
+                Staff.render(notes);
                 $('#scale').show();
             }
         });
@@ -91,10 +92,11 @@
                 draw: function(id) {
                     var canvas = document.getElementById(id);
                     var ctx = canvas.getContext('2d');
-                    var clef = new Image();
-                    var whole = new Image();
+                    Scale.clef = new Image();
+                    Scale.whole = new Image(); // Init scale and whole-note images
 
-                    clef.onload = function() {
+                    Scale.clef.onload = function() {
+                        var clef = Scale.clef;
                         var lineScale = 15;
                         var vOffset = 10;
 
@@ -111,8 +113,11 @@
                         var scaling = Staff.scaleVector(clef, 35);
                         ctx.drawImage(clef, 0, 0, scaling.width, scaling.height);
                     };
-                    clef.src = 'svg/g_clef.svg';
-                    whole.src = 'svg/whole_note.svg';
+                    Scale.clef.src = 'svg/g_clef.svg';
+                    Scale.whole.src = 'svg/whole_note.svg';
+                },
+                render: function(scale) {
+
                 },
                 scaleVector: function(img, width) {
                     // Get scaling for an svg image based on a desired width

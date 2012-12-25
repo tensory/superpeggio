@@ -77,43 +77,53 @@
         };
 
         Staff = (function() {
-             return {
-                 draw: function(id) {
-                     var canvas = document.getElementById(id);
-                     var ctx = canvas.getContext('2d');
-                     var clef = new Image();
-                     var imageObj = new Image();
+            var noteHeights = {
+                'a': 100,
+                'b': 105,
+                'c': 110,
+                'd': 115,
+                'e': 120,
+                'f': 130,
+                'g': 135
+            };
 
-                     clef.onload = function() {
-                         var lineScale = 15;
-                         var vOffset = 10;
+            return {
+                draw: function(id) {
+                    var canvas = document.getElementById(id);
+                    var ctx = canvas.getContext('2d');
+                    var clef = new Image();
+                    var whole = new Image();
 
-                         for (var i = 0; i < 5; i++) {
-                             ctx.beginPath();
-                             ctx.strokeStyle = '#000000';
-                             ctx.lineWidth = 0.5;
-                             ctx.moveTo(0, i * lineScale + vOffset);
-                             ctx.lineTo(canvas.width, i * lineScale + vOffset);
-                             ctx.stroke();
-                             ctx.closePath();
-                         }
+                    clef.onload = function() {
+                        var lineScale = 15;
+                        var vOffset = 10;
 
-                         var scaling = Staff.scaleVector(clef, 35);
-                         window.console.log(scaling);
-                         ctx.drawImage(clef, 0, 0, scaling.width, scaling.height);
-                     };
-                     clef.src = 'svg/g_clef.svg';
-                 },
-                 scaleVector: function(img, width) {
-                     // Get scaling for an svg image based on a desired width
-                     var aspect = (img.height / img.width);
+                        for (var i = 0; i < 5; i++) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(0, i * lineScale + vOffset);
+                            ctx.lineTo(canvas.width, i * lineScale + vOffset);
+                            ctx.stroke();
+                            ctx.closePath();
+                        }
 
-                     return {
-                         width: width,
-                         height: width * aspect
-                     };
+                        var scaling = Staff.scaleVector(clef, 35);
+                        ctx.drawImage(clef, 0, 0, scaling.width, scaling.height);
+                    };
+                    clef.src = 'svg/g_clef.svg';
+                    whole.src = 'svg/whole_note.svg';
+                },
+                scaleVector: function(img, width) {
+                    // Get scaling for an svg image based on a desired width
+                    var aspect = (img.height / img.width);
+
+                    return {
+                        width: width,
+                        height: width * aspect
+                    };
                 }
-             }
+            }
         })();
         Cycle = (function() {
             var cycle = {};

@@ -43,6 +43,13 @@
                 $('#kill').attr('disabled', 'disabled');
             },
 
+            clearScale: function(keyName, notes) {
+                if ($('#scale').is(':visible')) {
+                    Staff.clear();
+                    Staff.draw();
+                }
+            },
+
             drawScale: function(keyName, notes) {
                 Staff.render('scale', notes);
                 $('#scale').show();
@@ -168,6 +175,9 @@
                 init: function(id) {
                     staff.element = document.getElementById(id);
                     staff.ctx = staff.element.getContext('2d');
+                },
+                clear: function() {
+                    staff.ctx.clearRect(0, 0, staff.element.width, staff.element.height);
                 }
             }
         })();
@@ -175,6 +185,7 @@
             var cycle = {};
 
             cycle.drawScale = function(keyName) {
+                $.fn.clearScale();
                 $.fn.drawScale(keyName, this.scales[keyName]);
             };
 
@@ -538,6 +549,16 @@
             });
 
             Wheel.draw(colors);
+
+            $('h1').click(function(e) {
+                testKey();
+            });
+
+            var testKey = function testKey() {
+                $('#c').click();
+                $('#d').click();
+                $('#e').click();
+            };
         });
     </script>
     <style type="text/css">

@@ -44,7 +44,7 @@
             },
 
             drawScale: function(keyName, notes) {
-                Staff.render(notes);
+                Staff.render('scale', notes);
                 $('#scale').show();
             }
         });
@@ -79,30 +79,28 @@
 
         Staff = (function() {
             var noteHeights = {
-                'a': 100,
-                'b': 105,
-                'c': 110,
+                'a': 38,
+                'b': 30,
+                'c': 22,
                 'd': 115,
-                'e': 120,
-                'f': 130,
-                'g': 135
+                'e': 65,
+                'f': 52,
+                'g': 45 // **
             };
 
             return {
                 draw: function(id) {
                     var canvas = document.getElementById(id);
                     var ctx = canvas.getContext('2d');
-                    Scale.clef = new Image();
-                    Scale.whole = new Image(); // Init scale and whole-note images
+                    var clef = new Image();
 
-                    Scale.clef.onload = function() {
-                        var clef = Scale.clef;
+                    clef.onload = function() {
                         var lineScale = 15;
                         var vOffset = 10;
 
                         for (var i = 0; i < 5; i++) {
                             ctx.beginPath();
-                            ctx.strokeStyle = '#000000';
+                            ctx.strokeStyle = 'black';
                             ctx.lineWidth = 0.5;
                             ctx.moveTo(0, i * lineScale + vOffset);
                             ctx.lineTo(canvas.width, i * lineScale + vOffset);
@@ -113,12 +111,39 @@
                         var scaling = Staff.scaleVector(clef, 35);
                         ctx.drawImage(clef, 0, 0, scaling.width, scaling.height);
                     };
-                    Scale.clef.src = 'svg/g_clef.svg';
-                    Scale.whole.src = 'svg/whole_note.svg';
+                    clef.src = 'svg/g_clef.svg';
                 },
-                render: function(scale) {
+                render: function(id, scale) {
+                    var canvas = document.getElementById(id);
+                    var ctx = canvas.getContext('2d');
+                    var whole = new Image();
+                    var xOrigin = 50; // pixels from edge of canvas
 
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'red';
+                    ctx.moveTo(50, 5);
+                    ctx.lineTo(55, 5);
+                    ctx.stroke();
+                    ctx.closePath(); // god damn it, drawing a line is annoying
+
+                    window.console.log(scale);
+                    whole.onload = function() {
+
+                        var noteSize = Staff.scaleVector(whole, 20);
+                        _.each(scale, function(el, count) {
+                            // special case for low C
+
+                            if (_.first(el) == 'c' && count == 0) {
+                                Staff.drawLine(xOrigin - 5, 85, xOrigin + 10, 85);
+                            }
+                            window.console.log(noteSize.height);
+                            ctx.drawImage(whole, xOrigin + (count * 35), noteHeights[_.first(el)], noteSize.width, noteSize.height);
+                        });
+                    };
+                    whole.src = 'svg/whole_note.svg';
                 },
+
+                // To draw notes in tonic order,
                 scaleVector: function(img, width) {
                     // Get scaling for an svg image based on a desired width
                     var aspect = (img.height / img.width);
@@ -127,6 +152,18 @@
                         width: width,
                         height: width * aspect
                     };
+                },
+                drawLine: function(x1, y1, x2, y2) {
+                    var canvas = document.getElementById('scale'); // change to property of this
+                    var ctx = canvas.getContext('2d');
+
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'red';
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(y2, y2);
+                    ctx.stroke();
+                    ctx.closePath(); // god damn it, drawing a line is annoying
+
                 }
             }
         })();

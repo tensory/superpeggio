@@ -82,11 +82,11 @@
                 'a': 38,
                 'b': 30,
                 'c': 22,
-                'c-low': 75,
+                'c_low': 75,
                 'd': 68,
                 'e': 60,
                 'f': 52,
-                'g': 45 // **
+                'g': 45
             };
 
             var staff = {};
@@ -130,12 +130,15 @@
                             if (_.first(el) == 'c') {
                                 if (count == 0) {
                                     Staff.drawLine(xOrigin - 5, 85, xOrigin + 25, 85);
-                                    y = noteHeights['c-low'];
+                                    y = noteHeights['c_low'];
                                 }
                             }
 
+                            // Special case for C#
+                            if (el == 'd-flat') {
+                                y = noteHeights['c'];
+                            }
 
-                            window.console.log(noteSize.height);
                             ctx.drawImage(whole, xOrigin + (count * spacing), y, noteSize.width, noteSize.height);
                         });
                     };

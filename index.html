@@ -85,16 +85,21 @@
         };
 
         Staff = (function() {
-            var noteHeights = {
+            var o3Heights = { // octave 3
                 'a': 38,
                 'b': 30,
-                'c': 22,
-                'c_low': 75,
+                'c': 75,
                 'd': 68,
                 'e': 60,
                 'f': 52,
                 'g': 45
             };
+
+            var o4Heights = {
+                'c': 22,
+                'd': 16,
+                'e': 8
+            }; // octave 4 only needs to start on C above middle
 
             var staff = {};
 
@@ -133,17 +138,19 @@
                         var noteSize = Staff.scaleVector(whole, 20);
                         _.each(scale, function(el, count) {
                             // special case for low C
-                            var y = noteHeights[_.first(el)];
+                            var y = o3Heights[_.first(el)];
                             if (_.first(el) == 'c') {
                                 if (count == 0) {
                                     Staff.drawLine(xOrigin - 5, 85, xOrigin + 25, 85);
-                                    y = noteHeights['c_low'];
+                                    y = o3Heights['c'];
+                                } else {
+                                    y = o4Heights['c']
                                 }
                             }
 
                             // Special case for C#
                             if (el == 'd-flat') {
-                                y = noteHeights['c'];
+                                y = o3Heights['c'];
                             }
 
                             ctx.drawImage(whole, xOrigin + (count * spacing), y, noteSize.width, noteSize.height);

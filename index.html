@@ -43,6 +43,11 @@
                 $('#kill').attr('disabled', 'disabled');
             },
 
+            highlightScaleName: function(element) {
+                $('a.key-name').css('font-weight', 'normal');
+                $(element).css('font-weight', 'bold');
+            },
+
             clearScale: function(keyName, notes) {
                 if ($('#scale').is(':visible')) {
                     Staff.clear();
@@ -539,6 +544,7 @@
 
             $('a.key-name').live('click', function(e) {
                 e.preventDefault();
+                $.fn.highlightScaleName($(this));
                 Cycle.drawScale($(this).attr('data-key-name'));
             });
 

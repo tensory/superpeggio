@@ -160,7 +160,10 @@
 
                             // Special case for C#
                             if (el == 'd-flat') {
-                                y = o3Heights['c'];
+                                if (count == 0) {
+                                    Staff.drawLine(xOrigin - 5, 85, xOrigin + 25, 85);
+                                    y = o3Heights['c'];
+                                }
                             }
 
                             if (count > 4) {
@@ -380,7 +383,6 @@
                     $('.memberships').hide();
                     $('.troll').hide();
                     $('#scales').hide();
-
 
                     $.fn.clearScale();
                     $('#scale').hide();

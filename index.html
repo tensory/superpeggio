@@ -98,7 +98,7 @@
                 'd': 73,
                 'e': 66,
                 'f': 59,
-                'g': 42
+                'g': 52
             };
 
             var staff = {};
@@ -181,10 +181,19 @@
                         'g major': ['♯', 1],
                         'd major': ['♯', 2],
                         'a major': ['♯', 3],
-                        'f major': ['♭', 1]
-                    };
-                    var exes = [35, 45, 55, 65, 40, 45, 50];
-                    var whys = [];
+                        'f major': ['♭', 1],
+                        'g natural minor': ['♭', 2],
+                        'b-flat major': ['♭', 2],
+                        'e-flat major': ['♭', 3],
+                        'a-flat major': ['♭', 4],
+                        'f natural minor': ['♭', 4]
+                    },
+                            exes = [],
+                            whys = [];
+                    for (var i = 0; i < 7; i++) {
+                        exes[i] = 35 + (i * 8);
+                    }
+
                     ctx.font = "18px sans-serif";
                     ctx.fillText('#', 30, 90, 90);
 
@@ -194,7 +203,7 @@
                         if (keySignatures[keyName][0] == '♯') {
                             whys = [17, 38, 13, 26, 0, 0, 0];
                         } else { // flats, then
-                            whys = [42, 10, 0, 0, 0, 0, 0];
+                            whys = [52, 30, 59, 38, 0, 0, 0];
                         }
 
                         for (var i = 0; i < keySignatures[keyName][1]; i++) {
@@ -589,9 +598,9 @@
             });
 
             var testKey = function testKey() {
-                $('#c').click();
-                $('#d').click();
-                $('#e').click();
+                $('#e-flat').click();
+                $('#g').click();
+                $('#f').click();
             };
         });
     </script>

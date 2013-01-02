@@ -90,25 +90,15 @@
         };
 
         Staff = (function() {
-            var o3Heights = { // octave 3
-                'a': 38,
+            var tonicY = { // octave 3
+                'a': 35,
                 'b': 30,
-                'c': 75,
-                'd': 68,
-                'e': 60,
-                'f': 52,
-                'g': 45
+                'c': 70,
+                'd': 63,
+                'e': 56,
+                'f': 49,
+                'g': 42
             };
-
-            var o4Heights = {
-                'a': 38,
-                'b': 30,
-                'c': 22,
-                'd': 15,
-                'e': 8,
-                'f': 0,
-                'g': -8
-            }; // octave 4 only needs to start on C above middle
 
             var staff = {};
 
@@ -117,7 +107,7 @@
                     var clef = new Image();
 
                     clef.onload = function() {
-                        var lineScale = 15;
+                        var lineScale = 14;
                         var vOffset = 10;
                         var ctx = staff.ctx;
 
@@ -140,37 +130,24 @@
                     var ctx = staff.ctx;
                     var whole = new Image();
                     var xOrigin = 50; // pixels from edge of canvas
-                    var spacing = 35;
+                    var xSpacing = 35;
+                    var ySpacing = 7;
+                    var tonic = _.first(scale[0]);
+
 
                     window.console.log(scale);
                     whole.onload = function() {
                         var noteSize = Staff.scaleVector(whole, 20);
+                        var y;
                         _.each(scale, function(el, count) {
                             var natural = _.first(el);
-                            // special case for low C
-                            var y = o3Heights[natural];
-                            if (natural == 'c') {
-                                if (count == 0) {
-                                    Staff.drawLine(xOrigin - 5, 85, xOrigin + 25, 85);
-                                    y = o3Heights['c'];
-                                } else {
-                                    y = o4Heights['c']
-                                }
+                            y = tonicY[tonic] - (ySpacing * count);
+
+                            if (natural == 'c' && count == 0) {
+                                Staff.drawLine(xOrigin - 5, 80, xOrigin + 25, 80);
                             }
 
-                            // Special case for C#
-                            if (el == 'd-flat') {
-                                if (count == 0) {
-                                    Staff.drawLine(xOrigin - 5, 85, xOrigin + 25, 85);
-                                    y = o3Heights['c'];
-                                }
-                            }
-
-                            if (count > 4) {
-                                y = o4Heights[natural];
-                            }
-
-                            ctx.drawImage(whole, xOrigin + (count * spacing), y, noteSize.width, noteSize.height);
+                            ctx.drawImage(whole, xOrigin + (count * xSpacing), y, noteSize.width, noteSize.height);
                         });
                     };
                     whole.src = 'svg/whole_note.svg';

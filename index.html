@@ -56,6 +56,7 @@
             },
 
             drawScale: function(keyName, notes) {
+                Staff.renderKeySignature(keyName, notes);
                 Staff.render('scale', notes);
                 $('#scale').show();
             }
@@ -134,7 +135,6 @@
                     var ySpacing = 7;
                     var tonic = _.first(scale[0]);
 
-
                     window.console.log(scale);
                     whole.onload = function() {
                         var noteSize = Staff.scaleVector(whole, 20);
@@ -172,6 +172,35 @@
                     ctx.lineTo(x2, y2);
                     ctx.stroke();
                     ctx.closePath(); // god damn it, drawing a line is annoying
+                },
+                renderKeySignature: function(keyName, scale) {
+                    var ctx = staff.ctx;
+
+                    var keySignatures = {
+                        'e natural minor': ['♯', 1],
+                        'g major': ['♯', 1],
+                        'd major': ['♯', 2],
+                        'a major': ['♯', 3],
+                        'f major': ['♭', 1]
+                    };
+                    var exes = [35, 45, 55, 65, 40, 45, 50];
+                    var whys = [];
+                    ctx.font = "18px sans-serif";
+                    ctx.fillText('#', 30, 90, 90);
+
+                    if (keySignatures[keyName]) {
+                        // draw sharps
+                        window.console.log(keySignatures[keyName]);
+                        if (keySignatures[keyName][0] == '♯') {
+                            whys = [17, 38, 13, 26, 0, 0, 0];
+                        } else { // flats, then
+                            whys = [42, 10, 0, 0, 0, 0, 0];
+                        }
+
+                        for (var i = 0; i < keySignatures[keyName][1]; i++) {
+                            ctx.fillText(keySignatures[keyName][0], exes[i], whys[i], 20);
+                        }
+                    }
                 },
                 init: function(id) {
                     staff.element = document.getElementById(id);

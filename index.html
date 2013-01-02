@@ -101,9 +101,13 @@
             };
 
             var o4Heights = {
+                'a': 38,
+                'b': 30,
                 'c': 22,
-                'd': 16,
-                'e': 8
+                'd': 15,
+                'e': 8,
+                'f': 0,
+                'g': -8
             }; // octave 4 only needs to start on C above middle
 
             var staff = {};
@@ -142,9 +146,10 @@
                     whole.onload = function() {
                         var noteSize = Staff.scaleVector(whole, 20);
                         _.each(scale, function(el, count) {
+                            var natural = _.first(el);
                             // special case for low C
-                            var y = o3Heights[_.first(el)];
-                            if (_.first(el) == 'c') {
+                            var y = o3Heights[natural];
+                            if (natural == 'c') {
                                 if (count == 0) {
                                     Staff.drawLine(xOrigin - 5, 85, xOrigin + 25, 85);
                                     y = o3Heights['c'];
@@ -156,6 +161,10 @@
                             // Special case for C#
                             if (el == 'd-flat') {
                                 y = o3Heights['c'];
+                            }
+
+                            if (count > 4) {
+                                y = o4Heights[natural];
                             }
 
                             ctx.drawImage(whole, xOrigin + (count * spacing), y, noteSize.width, noteSize.height);

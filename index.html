@@ -144,7 +144,11 @@
                             y = tonicY[tonic] - (ySpacing * count);
 
                             if (natural == 'c' && count == 0) {
-                                Staff.drawLine(xOrigin - 5, 80, xOrigin + 25, 80);
+                                Staff.drawLine(xOrigin - 5, 90, xOrigin + 25, 90);
+                            }
+
+                            if (natural == 'a' && count == 6) {
+                                Staff.drawLine(xOrigin + 205, 6, xOrigin + 235, 6);
                             }
 
                             ctx.drawImage(whole, xOrigin + (count * xSpacing), y, noteSize.width, noteSize.height);

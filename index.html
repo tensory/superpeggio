@@ -92,12 +92,12 @@
 
         Staff = (function() {
             var tonicY = { // octave 3
-                'a': 35,
-                'b': 30,
-                'c': 70,
-                'd': 63,
-                'e': 56,
-                'f': 49,
+                'a': 45,
+                'b': 38,
+                'c': 80,
+                'd': 73,
+                'e': 66,
+                'f': 59,
                 'g': 42
             };
 
@@ -109,7 +109,7 @@
 
                     clef.onload = function() {
                         var lineScale = 14;
-                        var vOffset = 10;
+                        var vOffset = 20;
                         var ctx = staff.ctx;
 
                         for (var i = 0; i < 5; i++) {
@@ -123,7 +123,7 @@
                         }
 
                         var scaling = Staff.scaleVector(clef, 35);
-                        ctx.drawImage(clef, 0, 0, scaling.width, scaling.height);
+                        ctx.drawImage(clef, 0, 8, scaling.width, scaling.height);
                     };
                     clef.src = 'svg/g_clef.svg';
                 },

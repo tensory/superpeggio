@@ -103,6 +103,26 @@
 
             var staff = {};
 
+            staff.getKeySignature = function(name) {
+                var keySignatures = {
+                    'e natural minor': ['♯', 1],
+                    'g major': ['♯', 1],
+                    'd major': ['♯', 2],
+                    'b natural minor': ['♯', 2],
+                    'a major': ['♯', 3],
+                    'f major': ['♭', 1],
+                    'g natural minor': ['♭', 2],
+                    'b-flat major': ['♭', 2],
+                    'e-flat major': ['♭', 3],
+                    'a-flat major': ['♭', 4],
+                    'a-flat melodic minor': ['♭', 4],
+                    'f natural minor': ['♭', 4],
+                    'd-flat melodic minor': ['♭', 5],
+                    'e-flat natural minor': ['♭', 6]
+                };
+                return keySignatures[name] || [];
+            };
+
             return {
                 draw: function() {
                     var clef = new Image();
@@ -178,24 +198,7 @@
                     ctx.closePath(); // god damn it, drawing a line is annoying
                 },
                 renderKeySignature: function(keyName, scale) {
-                    var ctx = staff.ctx;
-
-                    var keySignatures = {
-                        'e natural minor': ['♯', 1],
-                        'g major': ['♯', 1],
-                        'd major': ['♯', 2],
-                        'b natural minor': ['♯', 2],
-                        'a major': ['♯', 3],
-                        'f major': ['♭', 1],
-                        'g natural minor': ['♭', 2],
-                        'b-flat major': ['♭', 2],
-                        'e-flat major': ['♭', 3],
-                        'a-flat major': ['♭', 4],
-                        'a-flat melodic minor': ['♭', 4],
-                        'f natural minor': ['♭', 4],
-                        'd-flat melodic minor': ['♭', 5],
-                        'e-flat natural minor': ['♭', 6]
-                    },
+                    var ctx = staff.ctx,
                             exes = [],
                             whys = [];
                     for (var i = 0; i < 7; i++) {
@@ -203,18 +206,18 @@
                     }
 
                     ctx.font = "18px sans-serif";
-
-                    if (keySignatures[keyName]) {
+                    var sig = staff.getKeySignature(keyName);
+                    if (sig.length) {
                         // draw sharps
-                        window.console.log(keySignatures[keyName]);
-                        if (keySignatures[keyName][0] == '♯') {
+                        window.console.log(sig);
+                        if (sig[0] == '♯') {
                             whys = [17, 38, 13, 26, 0, 0, 0];
                         } else { // flats, then
                             whys = [52, 30, 59, 38, 66, 45, 0];
                         }
 
-                        for (var i = 0; i < keySignatures[keyName][1]; i++) {
-                            ctx.fillText(keySignatures[keyName][0], exes[i], whys[i], 20);
+                        for (var i = 0; i < sig[1]; i++) {
+                            ctx.fillText(sig[0], exes[i], whys[i], 20);
                         }
                     }
                 },

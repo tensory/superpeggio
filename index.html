@@ -57,7 +57,7 @@
 
             drawScale: function(keyName, notes) {
                 Staff.renderKeySignature(keyName, notes);
-                Staff.render('scale', notes);
+                Staff.render('scale', keyName, notes);
                 $('#scale').show();
             }
         });
@@ -105,18 +105,34 @@
 
             staff.getKeySignature = function(name) {
                 var keySignatures = {
+                    'a melodic minor': ['♯', 1],
                     'e natural minor': ['♯', 1],
+                    'e melodic minor': ['♯', 1],
                     'g major': ['♯', 1],
                     'd major': ['♯', 2],
                     'b natural minor': ['♯', 2],
+                    'b melodic minor': ['♯', 2],
+                    'b harmonic minor': ['♯', 2],
                     'a major': ['♯', 3],
+                    'b major': ['♯', 5],
+                    'a-flat natural minor': ['♯', 5],
+                    'f-sharp major': ['♯', 7],
                     'f major': ['♭', 1],
+                    'd natural minor': ['♭', 1],
+                    'd melodic minor': ['♭', 1],
                     'g natural minor': ['♭', 2],
                     'b-flat major': ['♭', 2],
+                    'b-flat melodic minor': ['♭', 2],
+                    'b-flat harmonic minor': ['♭', 2],
+                    'g harmonic minor': ['♭', 2],
+                    'c natural minor': ['♭', 3],
+                    'c harmonic minor': ['♭', 3],
                     'e-flat major': ['♭', 3],
                     'a-flat major': ['♭', 4],
-                    'a-flat melodic minor': ['♭', 4],
                     'f natural minor': ['♭', 4],
+                    'a-flat harmonic minor': ['♭', 4],
+                    'a-flat melodic minor': ['♭', 4],
+                    'd-flat harmonic minor': ['♭', 5],
                     'd-flat melodic minor': ['♭', 5],
                     'e-flat natural minor': ['♭', 6]
                 };
@@ -147,13 +163,19 @@
                     };
                     clef.src = 'svg/g_clef.svg';
                 },
-                render: function(id, scale) {
+                render: function(id, name, scale) {
                     var ctx = staff.ctx;
                     var whole = new Image();
                     var xOrigin = 50; // pixels from edge of canvas
-                    var xSpacing = 35;
+                    var xSpacing = 32;
                     var ySpacing = 7;
                     var tonic = _.first(scale[0]);
+
+                    // add a little bit to xOffset to deal with large key signatures
+                    var signature = staff.getKeySignature(name);
+                    if (signature.length) {
+                        xOrigin += 8 * signature[1];
+                    }
 
                     window.console.log(scale);
                     whole.onload = function() {
@@ -167,14 +189,35 @@
                                 Staff.drawLine(xOrigin - 5, 90, xOrigin + 25, 90);
                             }
 
-                            if (natural == 'a' && count == 6) {
-                                Staff.drawLine(xOrigin + 205, 6, xOrigin + 235, 6);
+                            if (['b', 'a'].indexOf(natural) > -1 && count == 6) {
+                                Staff.drawLine(xOrigin + ((count * xSpacing) - 5), 6, xOrigin + ((count * xSpacing) + 25), 6);
                             }
+
+                            if (count == 2 && name.indexOf('minor') > -1 && el.indexOf('flat') > -1) {
+                                ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                            }
+
+                            if (count == 5 && name.indexOf('harmonic minor') > -1 && el.indexOf('flat') == -1) {
+                                ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                            }
+
+/*
+                            // Special cases
+                            if (count == 6 && name.indexOf('minor') > -1) {
+                                if (el.indexOf('sharp') > -1) {
+                                    ctx.fillText('♯', xOrigin + (count * xSpacing) - 15, y + 16, 20);
+                                } else if (el.indexOf('flat') > -1) {
+                                    ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                                } else {
+                                    ctx.fillText('♮', xOrigin + (count * xSpacing) - 15, y + 16, 20);
+                                }
+                            }
+                            */
 
                             ctx.drawImage(whole, xOrigin + (count * xSpacing), y, noteSize.width, noteSize.height);
                         });
                     };
-                    whole.src = 'svg/whole_note.svg';
+                    whole.src = 'svg/whole_note.svg';e
                 },
 
                 // To draw notes in tonic order,
@@ -188,10 +231,9 @@
                     };
                 },
                 drawLine: function(x1, y1, x2, y2, color) {
-                    var color = (color) ? color : 'black';
                     var ctx = staff.ctx;
                     ctx.beginPath();
-                    ctx.strokeStyle = color;
+                    ctx.strokeStyle = (color) ? color : 'black';
                     ctx.moveTo(x1, y1);
                     ctx.lineTo(x2, y2);
                     ctx.stroke();
@@ -209,9 +251,8 @@
                     var sig = staff.getKeySignature(keyName);
                     if (sig.length) {
                         // draw sharps
-                        window.console.log(sig);
                         if (sig[0] == '♯') {
-                            whys = [17, 38, 13, 26, 0, 0, 0];
+                            whys = [26, 48, 19, 41, 62, 34, 0];
                         } else { // flats, then
                             whys = [52, 30, 59, 38, 66, 45, 0];
                         }
@@ -608,9 +649,9 @@
             });
 
             var testKey = function testKey() {
-                $('#e-flat').click();
-                $('#g').click();
-                $('#f').click();
+                $('#d-flat').click();
+                $('#b-flat').click();
+                $('#b').click();
             };
         });
     </script>
@@ -706,7 +747,7 @@
 
         #scale {
             display: none;
-            width: 250px;
+            width: 320px;
         }
 
         #scales ul {

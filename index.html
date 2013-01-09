@@ -373,7 +373,7 @@
             });
 
             $.each(cycle.toneMap, function(element, i) {
-                var pathTo = 'files/' + element + '.wav';
+                var pathTo = 'shortfiles/' + element + '.wav';
                 $.ajax({
                     type: 'GET',
                     url: pathTo,
@@ -466,6 +466,24 @@
                 }
             };
 
+            cycle.toLoop = {};
+            
+            cycle.isLooping = false;
+            cycle.loop = function() {
+                var notes = Object.keys(cycle.toLoop).sort();
+                if (notes.length) {
+                    cycle.isLooping = true;
+                    _.each(notes, function(noteName) {
+                        var tone = cycle.toLoop[noteName]; 
+                        console.log("loop! " + noteName + "=" + tone);
+                    });
+                    console.log("--");
+                    setTimeout(cycle.loop, 1000);
+                } else {
+                  cycle.isLooping = false;
+                }
+            };
+
             cycle.togglePlay = function(noteName) {
                 var tone = Cycle.toneMap[noteName];
 
@@ -473,32 +491,22 @@
                     throw "Invalid note in toneMap";
                 }
 
-                if (tone.soundLeft) {
-                    if (tone.isPlaying == false) {
-                        Cycle.restartSound(tone);
-                    } else {
-                        Cycle.stopSound(tone);
+                $('#' + noteName).toggleClass('pressed');
+                cycle.doRender();
+
+                if (cycle.toLoop.hasOwnProperty(noteName)) {
+                    delete cycle.toLoop[noteName];
+                } else {
+                    cycle.toLoop[noteName] = tone;
+                    if (!cycle.isLooping) {
+                      cycle.loop();
                     }
-                    $('#' + noteName).toggleClass('pressed');
-                    tone.isPlaying = !(tone.isPlaying);
                 }
 
-                cycle.doRender();
             };
 
             cycle.getNoteSymbol = function(noteName) {
                 return cycle.toneMap[noteName].symbol;
-            };
-
-            cycle.restartSound = function(tone) {
-                tone.soundLeft.unmute();
-                tone.soundRight.unmute();
-                tone.soundLeft.play();
-            };
-
-            cycle.stopSound = function(tone) {
-                tone.soundLeft.mute();
-                tone.soundRight.mute();
             };
 
             cycle.searchForScales = function() {

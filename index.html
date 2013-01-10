@@ -448,6 +448,10 @@
                 cycle.doRender();
             };
 
+            cycle.resetLoop = function() {
+              cycle.toLoop = {};
+            };
+
             cycle.getNoteSymbol = function(noteName) {
                 return cycle.toneMap[noteName].symbol;
             };
@@ -582,7 +586,7 @@
 
             $('#kill').click(function(e) {
                 e.preventDefault();
-                Cycle.toLoop = [];
+                Cycle.resetLoop();
                 $.fn.resetView();
             });
 

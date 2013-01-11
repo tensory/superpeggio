@@ -41,6 +41,7 @@
                 $('#current').html('');
                 $('#scales').html('');
                 $('#kill').attr('disabled', 'disabled');
+                $('.note-name').removeClass('pressed');
             },
 
             highlightScaleName: function(element) {
@@ -318,48 +319,7 @@
                 'b': 'b'
             };
 
-            cycle.audible = function() {
-                var active = [];
-                // Determine what's playing, if anything
-                for (var noteName in cycle.toneMap) {
-                    if (cycle.toneMap[noteName].isPlaying) {
-                        active.push(noteName);
-                    }
-                }
-                return active;
-            };
-
             cycle.scales = {
-            };
-
-            cycle.startSound = function(tone) {
-                if (cycle.toneMap[tone].soundLeft && cycle.toneMap[tone].soundRight) {
-                    cycle.toneMap[tone].soundLeft.bind('timeupdate', function(e) {
-                        if (this.getTime() > 2.8) {
-                            cycle.toneMap[tone].soundRight.play();
-                            this.mute();
-                        }
-                    });
-
-                    cycle.toneMap[tone].soundRight.bind('timeupdate', function(e) {
-                        if (this.getTime() > 2.8) {
-                            cycle.toneMap[tone].soundLeft.play();
-                            this.mute();
-                        }
-                    });
-
-                    cycle.toneMap[tone].soundLeft.bind('play', function(e) {
-                        this.unmute();
-                    });
-
-                    cycle.toneMap[tone].soundRight.bind('play', function(e) {
-                        this.unmute();
-                        cycle.toneMap[tone].soundLeft.stop();
-                    });
-
-                } else {
-                    throw "Sounds are not ready";
-                }
             };
 
             // Initialize Cycle.toneMap and the scales
@@ -378,27 +338,7 @@
                     type: 'GET',
                     url: pathTo,
                     success: function() {
-                        cycle.toneMap[element].soundLeft = new buzz.sound(pathTo, { loop: false });
-                        cycle.toneMap[element].soundRight = new buzz.sound(pathTo, { loop: false });
-                        // Hacked "seamless" playback
-                        // http://forestmist.org/2010/04/html5-audio-loops/
-                        // tl;dr: HTML5 Audio.loop doesn't work seamlessly in any browser.
-                        // Two alternating sounds work around the gap.
-                        cycle.toneMap[element].soundLeft.bind('timeupdate', function(e) {
-                            if (this.getTime() > 2) {
-                                cycle.toneMap[element].soundRight.play();
-                                this.setTime(0);
-                                this.pause();
-                            }
-                        });
-
-                        cycle.toneMap[element].soundRight.bind('timeupdate', function(e) {
-                            if (this.getTime() > 2) {
-                                cycle.toneMap[element].soundLeft.play();
-                                this.setTime(0);
-                                this.pause();
-                            }
-                        });
+                        cycle.toneMap[element].sound = new buzz.sound(pathTo, { loop: false });
 
                         // Init scales.
                         var major = new Scale(cycle, element, "", "major");
@@ -466,39 +406,54 @@
                 }
             };
 
-            cycle.togglePlay = function(noteName) {
-                var tone = Cycle.toneMap[noteName];
+            cycle.toLoop = {};
+            
+            cycle.isLooping = false;
+            cycle.loop = function() {
+                var notes = Object.keys(cycle.toLoop).sort();
+                if (notes.length) {
+                    cycle.isLooping = true;
+                    var delay = 300; // ms; each short sound is 250ms
+                    for (var i = 0; i < notes.length; i++) {
+                        var player = ( function(noteName) {
+                            return function() {
+                                cycle.toneMap[noteName].sound.play();
+                            }
+                        } )( notes[i] );
+                        setTimeout(player, i * delay);
+                    }
+                    setTimeout(cycle.loop, (notes.length + 1) * delay);
+                } else {
+                  cycle.isLooping = false;
+                }
+            };
 
-                if (!tone) {
+            cycle.togglePlay = function(noteName) {
+
+                if (!Cycle.toneMap[noteName]) {
                     throw "Invalid note in toneMap";
                 }
 
-                if (tone.soundLeft) {
-                    if (tone.isPlaying == false) {
-                        Cycle.restartSound(tone);
-                    } else {
-                        Cycle.stopSound(tone);
+
+                if (cycle.toLoop.hasOwnProperty(noteName)) {
+                    delete cycle.toLoop[noteName];
+                } else {
+                    cycle.toLoop[noteName] = true;
+                    if (!cycle.isLooping) {
+                      cycle.loop();
                     }
-                    $('#' + noteName).toggleClass('pressed');
-                    tone.isPlaying = !(tone.isPlaying);
                 }
 
+                $('#' + noteName).toggleClass('pressed');
                 cycle.doRender();
+            };
+
+            cycle.resetLoop = function() {
+              cycle.toLoop = {};
             };
 
             cycle.getNoteSymbol = function(noteName) {
                 return cycle.toneMap[noteName].symbol;
-            };
-
-            cycle.restartSound = function(tone) {
-                tone.soundLeft.unmute();
-                tone.soundRight.unmute();
-                tone.soundLeft.play();
-            };
-
-            cycle.stopSound = function(tone) {
-                tone.soundLeft.mute();
-                tone.soundRight.mute();
             };
 
             cycle.searchForScales = function() {
@@ -508,7 +463,7 @@
                     throw "Scales were not initialized";
                 }
 
-                var playing = cycle.audible();
+                var playing = Object.keys(cycle.toLoop);
                 if (playing.length > 0) {
                     // Something is playing... look for scales that all playing notes are within
                     for (var toneIndex in playing) {
@@ -631,14 +586,7 @@
 
             $('#kill').click(function(e) {
                 e.preventDefault();
-                $.each(Cycle.toneMap, function(i, el) {
-                    if (el.isPlaying) {
-                        Cycle.stopSound(el);
-                        el.isPlaying = false;
-                        $('#' + i).removeClass('pressed');
-                    }
-                });
-
+                Cycle.resetLoop();
                 $.fn.resetView();
             });
 

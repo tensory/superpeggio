@@ -5,6 +5,7 @@
     <script src="jquery-1.8.3.min.js"></script>
     <script src="underscore-min.js"></script>
     <script src="buzz.js"></script>
+    <script src="jquery-ui-1.9.2.custom.min.js"></script>
     <script>
 
         /**
@@ -418,6 +419,7 @@
                         var player = ( function(noteName) {
                             return function() {
                                 cycle.toneMap[noteName].sound.play();
+                                $('#' + noteName).effect("bounce");
                             }
                         } )( notes[i] );
                         setTimeout(player, i * delay);

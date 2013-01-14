@@ -37,6 +37,7 @@
             },
 
             resetView: function() {
+                $.fn.clearScale();
                 $('.message').hide();
                 $('#scale').hide();
                 $('#current').html('');
@@ -50,7 +51,7 @@
                 $(element).css('font-weight', 'bold');
             },
 
-            clearScale: function(keyName, notes) {
+            clearScale: function() {
                 if ($('#scale').is(':visible')) {
                     Staff.clear();
                     Staff.draw();

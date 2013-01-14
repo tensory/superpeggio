@@ -147,8 +147,8 @@
                     'e-flat natural minor': ['♭', 6],
                     'a-flat natural minor': ['♭', 7]
 
-                    // 'g melodic minor' has one flat and one sharp.
-                    // d harmonic minor has one flat and one sharp.
+                    // 'g melodic minor' has one flat and one sharp. *
+                    // d harmonic minor has one flat and one sharp. *
                     // c#/db is just weird. special case that.
                     // f-flat is also super weird.
                 };
@@ -250,8 +250,18 @@
                                 Staff.drawLine(xOrigin + ((count * xSpacing) - 5), 6, xOrigin + ((count * xSpacing) + 25), 6);
                             }
 
+                            // G harmonic minor
                             if (count == 6 && name == 'g harmonic minor') {
                                 drawAccidental('♯', count, y);
+                            }
+
+                            if (name == 'd harmonic minor') {
+                                if (count == 5) {
+                                    drawAccidental('♭', count, y);
+                                }
+                                if (count == 6) {
+                                    drawAccidental('♯', count, y);
+                                }
 
                             }
 

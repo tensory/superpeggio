@@ -107,9 +107,13 @@
 
             staff.getKeySignature = function(name) {
                 var keySignatures = {
+                    'a harmonic minor': ['♯', 1],
                     'e natural minor': ['♯', 1],
+                    'a melodic minor': ['♯', 1],
+                    'g major': ['♯', 1],
                     'd major': ['♯', 2],
                     'e harmonic minor': ['♯', 2],
+                    'a major': ['♯', 3],
                     'e melodic minor': ['♯', 3],
                     'f-sharp natural minor': ['♯', 3],
                     'f-sharp harmonic minor': ['♯', 4],
@@ -121,14 +125,21 @@
                     'f major': ['♭', 1],
                     'c harmonic minor': ['♭', 2],
                     'f melodic minor': ['♭', 2],
+                    'g natural minor': ['♭', 2],
+                    'g harmonic minor': ['♭', 2], // also has one sharp. WEIRD
                     'c natural minor': ['♭', 3],
                     'e-flat major': ['♭', 3],
                     'f harmonic minor': ['♭', 3],
+                    'a-flat major': ['♭', 4],
                     'e-flat melodic minor': ['♭', 4],
                     'f natural minor': ['♭', 4],
                     'e-flat harmonic minor': ['♭', 5],
+                    'a-flat melodic minor': ['♭', 5],
+                    'a-flat harmonic minor': ['♭', 6],
                     'e-flat natural minor': ['♭', 6],
+                    'a-flat natural minor': ['♭', 7],
 
+                    // 'g melodic minor' has one flat and one sharp.
                     // d harmonic minor has one flat and one sharp.
                     // c#/db is just weird. special case that.
                     // f-flat is also super weird.

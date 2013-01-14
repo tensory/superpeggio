@@ -118,7 +118,7 @@
                     'b harmonic minor': ['♯', 3],
                     'e melodic minor': ['♯', 3],
                     'f-sharp natural minor': ['♯', 3],
-                    'b melodic minor': ['♯', 4],
+                    'b melodic minor': ['♯', 2],
                     'f-sharp harmonic minor': ['♯', 4],
                     'b major': ['♯', 5],
                     'f-sharp melodic minor': ['♯', 5],
@@ -147,46 +147,11 @@
                     'e-flat natural minor': ['♭', 6],
                     'a-flat natural minor': ['♭', 7]
 
+                    // b melodic minor has extra sharps at 6 and 7 *
                     // 'g melodic minor' has one flat and one sharp. *
                     // d harmonic minor has one flat and one sharp. *
-                    // c#/db is just weird. special case that.
-                    // f-flat is also super weird.
+                    // c#/db is just weird. special case.
                 };
-                /*
-                var keySignatures = {
-                    'a melodic minor': ['♯', 1],
-                    'e natural minor': ['♯', 1],
-                    'e melodic minor': ['♯', 1],
-                    'g major': ['♯', 1],
-                    'd major': ['♯', 2],
-                    'b natural minor': ['♯', 2],
-                    'b melodic minor': ['♯', 2],
-                    'b harmonic minor': ['♯', 2],
-                    'a major': ['♯', 3],
-                    'b major': ['♯', 5],
-                    'a-flat natural minor': ['♯', 5],
-                    'f-sharp major': ['♯', 7],
-                    'f major': ['♭', 1],
-                    'd natural minor': ['♭', 1],
-                    'd melodic minor': ['♭', 1],
-                    'g natural minor': ['♭', 2],
-                    'b-flat major': ['♭', 2],
-                    'b-flat melodic minor': ['♭', 2],
-                    'b-flat harmonic minor': ['♭', 2],
-                    'c harmonic minor': ['♭', 2],
-                    'g harmonic minor': ['♭', 2],
-                    'c natural minor': ['♭', 3],
-
-                    'e-flat major': ['♭', 3],
-                    'a-flat major': ['♭', 4],
-                    'f natural minor': ['♭', 4],
-                    'a-flat harmonic minor': ['♭', 4],
-                    'a-flat melodic minor': ['♭', 4],
-                    'd-flat harmonic minor': ['♭', 5],
-                    'd-flat melodic minor': ['♭', 5],
-                    'e-flat natural minor': ['♭', 6]
-                };
-                */
                 return keySignatures[name] || [];
             };
 
@@ -262,11 +227,10 @@
                                 if (count == 6) {
                                     drawAccidental('♯', count, y);
                                 }
-
                             }
 
-                            if (count == 5 && name.indexOf('harmonic minor') > -1 && el.indexOf('flat') == -1) {
-                                ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                            if (name == 'b melodic minor' && [5, 6].indexOf(count) > -1) {
+                                drawAccidental('♯', count, y);
                             }
 
 

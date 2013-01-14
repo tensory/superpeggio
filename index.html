@@ -107,6 +107,25 @@
 
             staff.getKeySignature = function(name) {
                 var keySignatures = {
+                    'e natural minor': ['♯', 1],
+                    'd major': ['♯', 2],
+                    'e harmonic minor': ['♯', 2],
+                    'e melodic minor': ['♯', 3],
+                    'e major': ['♯', 4],
+                    'c melodic minor': ['♭', 1],
+                    'd natural minor': ['♭', 1],
+                    'c harmonic minor': ['♭', 2],
+                    'c natural minor': ['♭', 3],
+                    'e-flat major': ['♭', 3],
+                    'e-flat melodic minor': ['♭', 4],
+                    'e-flat harmonic minor': ['♭', 5],
+                    'e-flat natural minor': ['♭', 6],
+
+                    // d harmonic minor has one flat and one sharp.
+                    // c#/db is just weird. special case that.
+                };
+                /*
+                var keySignatures = {
                     'a melodic minor': ['♯', 1],
                     'e natural minor': ['♯', 1],
                     'e melodic minor': ['♯', 1],
@@ -126,9 +145,10 @@
                     'b-flat major': ['♭', 2],
                     'b-flat melodic minor': ['♭', 2],
                     'b-flat harmonic minor': ['♭', 2],
+                    'c harmonic minor': ['♭', 2],
                     'g harmonic minor': ['♭', 2],
                     'c natural minor': ['♭', 3],
-                    'c harmonic minor': ['♭', 3],
+
                     'e-flat major': ['♭', 3],
                     'a-flat major': ['♭', 4],
                     'f natural minor': ['♭', 4],
@@ -138,6 +158,7 @@
                     'd-flat melodic minor': ['♭', 5],
                     'e-flat natural minor': ['♭', 6]
                 };
+                */
                 return keySignatures[name] || [];
             };
 

@@ -244,8 +244,8 @@
                                 Staff.drawLine(xOrigin + ((count * xSpacing) - 5), 6, xOrigin + ((count * xSpacing) + 25), 6);
                             }
 
-                            if (count == 2 && name.indexOf('minor') > -1 && el.indexOf('flat') > -1) {
-                                ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                            if (count == 6 && name.indexOf('g harmonic minor') > -1) {
+                                ctx.fillText('♯', xOrigin + (count * xSpacing) - 15, y + 14, 20);
                             }
 
                             if (count == 5 && name.indexOf('harmonic minor') > -1 && el.indexOf('flat') == -1) {

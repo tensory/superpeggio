@@ -131,7 +131,7 @@
                     'b-flat major': ['♭', 2],
                     'f melodic minor': ['♭', 2],
                     'g natural minor': ['♭', 2],
-                    'g harmonic minor': ['♭', 2], // also has one sharp. WEIRD
+                    'g harmonic minor': ['♭', 2], // Also has one sharp. *
                     'b-flat melodic minor': ['♭', 3],
                     'c natural minor': ['♭', 3],
                     'e-flat major': ['♭', 3],
@@ -145,7 +145,7 @@
                     'a-flat melodic minor': ['♭', 5],
                     'a-flat harmonic minor': ['♭', 6],
                     'e-flat natural minor': ['♭', 6],
-                    'a-flat natural minor': ['♭', 7],
+                    'a-flat natural minor': ['♭', 7]
 
                     // 'g melodic minor' has one flat and one sharp.
                     // d harmonic minor has one flat and one sharp.
@@ -222,6 +222,10 @@
                     var ySpacing = 7;
                     var tonic = _.first(scale[0]);
 
+                    function drawAccidental(accidental, count, y) {
+                        ctx.fillText(accidental, xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                    }
+
                     // add a little bit to xOffset to deal with large key signatures
                     var signature = staff.getKeySignature(name);
                     if (signature.length) {
@@ -232,7 +236,9 @@
                     whole.onload = function() {
                         var noteSize = Staff.scaleVector(whole, 20);
                         var y;
+
                         _.each(scale, function(el, count) {
+                            var context = this;
                             var natural = _.first(el);
                             y = tonicY[tonic] - (ySpacing * count);
 
@@ -244,13 +250,15 @@
                                 Staff.drawLine(xOrigin + ((count * xSpacing) - 5), 6, xOrigin + ((count * xSpacing) + 25), 6);
                             }
 
-                            if (count == 6 && name.indexOf('g harmonic minor') > -1) {
-                                ctx.fillText('♯', xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                            if (count == 6 && name == 'g harmonic minor') {
+                                drawAccidental('♯', count, y);
+
                             }
 
                             if (count == 5 && name.indexOf('harmonic minor') > -1 && el.indexOf('flat') == -1) {
                                 ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
                             }
+
 
 /*
                             // Special cases

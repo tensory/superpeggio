@@ -143,9 +143,13 @@
                     'f natural minor': ['♭', 4],
                     'e-flat harmonic minor': ['♭', 5],
                     'b-flat natural minor': ['♭', 5],
+                    'd-flat major': ['♭', 5],
                     'a-flat melodic minor': ['♭', 5],
+                    'd-flat harmonic minor': ['♭', 6],
+                    'd-flat melodic minor': ['♭', 6],
                     'a-flat harmonic minor': ['♭', 6],
                     'e-flat natural minor': ['♭', 6],
+                    'd-flat natural minor': ['♭', 7],
                     'a-flat natural minor': ['♭', 7]
 
                     // b melodic minor has extra sharps at 6 and 7 *
@@ -188,14 +192,17 @@
                     var ySpacing = 7;
                     var tonic = _.first(scale[0]);
 
-                    function drawAccidental(accidental, count, y) {
+                    function drawAccidental(accidental, count, y, doubled) {
                         ctx.fillText(accidental, xOrigin + (count * xSpacing) - 15, y + 14, 20);
+                        if (doubled) {
+                            ctx.fillText(accidental, xOrigin + (count * xSpacing) - 8, y + 14, 20);
+                        }
                     }
 
                     // add a little bit to xOffset to deal with large key signatures
                     var signature = staff.getKeySignature(name);
                     if (signature.length) {
-                        xOrigin += 8 * signature[1];
+                        xOrigin += 7 * signature[1];
                     }
 
                     window.console.log(scale);
@@ -212,7 +219,7 @@
                                 Staff.drawLine(xOrigin - 5, 90, xOrigin + 25, 90);
                             }
 
-                            if (['b', 'a'].indexOf(natural) > -1 && count == 6) {
+                            if (['b', 'a'].indexOf(natural) > -1 && count == 6 && y < 30) {
                                 Staff.drawLine(xOrigin + ((count * xSpacing) - 5), 6, xOrigin + ((count * xSpacing) + 25), 6);
                             }
 
@@ -238,19 +245,24 @@
                                 drawAccidental('♯', count, y);
                             }
 
+                            if (name == 'd-flat natural minor' && count == 6) {
+                                drawAccidental('♭', count, y, true);
+                            }
 
-/*
-                            // Special cases
-                            if (count == 6 && name.indexOf('minor') > -1) {
-                                if (el.indexOf('sharp') > -1) {
-                                    ctx.fillText('♯', xOrigin + (count * xSpacing) - 15, y + 16, 20);
-                                } else if (el.indexOf('flat') > -1) {
-                                    ctx.fillText('♭', xOrigin + (count * xSpacing) - 15, y + 14, 20);
-                                } else {
-                                    ctx.fillText('♮', xOrigin + (count * xSpacing) - 15, y + 16, 20);
+                            if (name == 'd-flat harmonic minor') {
+                                if (count == 5) {
+                                    drawAccidental('♭', count, y, true);
+                                }
+                                if (count == 6) {
+                                    drawAccidental('♮', count, y);
                                 }
                             }
-                            */
+
+                            if (name == 'd-flat melodic minor') {
+                                if (count == 6) {
+                                    drawAccidental('♮', count, y);
+                                }
+                            }
 
                             ctx.drawImage(whole, xOrigin + (count * xSpacing), y, noteSize.width, noteSize.height);
                         });
@@ -292,7 +304,7 @@
                         if (sig[0] == '♯') {
                             whys = [26, 48, 19, 41, 62, 34, 0];
                         } else { // flats, then
-                            whys = [52, 30, 59, 38, 66, 45, 0];
+                            whys = [52, 30, 59, 38, 66, 45, 73];
                         }
 
                         for (var i = 0; i < sig[1]; i++) {

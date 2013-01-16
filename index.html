@@ -126,6 +126,7 @@
                     'e major': ['♯', 4],
                     'f-sharp major': ['♯', 6],
                     'c melodic minor': ['♭', 1],
+                    'd melodic minor': ['♭', 1],
                     'd natural minor': ['♭', 1],
                     'f major': ['♭', 1],
                     'c harmonic minor': ['♭', 2],
@@ -261,6 +262,15 @@
                             if (name == 'd-flat melodic minor') {
                                 if (count == 6) {
                                     drawAccidental('♮', count, y);
+                                }
+                            }
+
+                            if (name == 'd melodic minor') {
+                                if (count == 5) {
+                                    drawAccidental('♮', count, y);
+                                }
+                                if (count == 6) {
+                                    drawAccidental('♯', count, y);
                                 }
                             }
 

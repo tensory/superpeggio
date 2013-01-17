@@ -442,10 +442,6 @@
                     $('#scales').html('');
                 }
 
-                if (searchResults.playing.length < 12) {
-//                    trollBeat.stop();
-                }
-
                 if (searchResults.playing.length == _.keys(cycle.toneMap).length) {
                     $('.message').hide();
                     trollBeat.play();
@@ -689,6 +685,15 @@
             display: none;
         }
 
+        #lolwut .attribution {
+            zoom: 1;
+            filter: alpha(opacity=40);
+            opacity: 0.4;
+        }
+
+        #lolwut .attribution a {
+            color: black;
+        }
         .note-name {
             font-size: 2em;
             letter-spacing: -2px;
@@ -724,6 +729,8 @@
 
         h1 {
             font-size: 3em;
+            width: 400px;
+            text-align: center;
         }
 
         #lolwut a, #colophon a {
@@ -804,7 +811,7 @@
 </head>
 <body>
 <div id="wrap">
-<h1>cranky scale generator makes angry scales</h1>
+<h1>superpeggio!</h1>
 <div id="container" style="position: relative;">
     <canvas id="wheel" class="animated"></canvas>
     <div id="buttons"></div>
@@ -815,12 +822,8 @@
     <div id="related">
         <div class="message troll">
             <img src="tumblr_lrldh5nJvh1qcit8q.gif"/></div>
-        <!--
-        http://www.tumblr.com/tagged/oontz-oontz-oontz
-        http://freesound.org/people/thecluegeek/sounds/156370/
-        -->
         <div class="message none">That's not part of any scale :(</div>
-        <div class="message memberships">These will make</div>
+        <div class="message memberships">Now you can make</div>
         <div id="scales">
         </div>
         <canvas id="scale"></canvas>
@@ -831,8 +834,9 @@
     <h2>What's this, then?</h2>
     <p>Click a few notes to learn the musical scales they produce.</p>
     <p>It is <strong>not</strong> a <a href="http://en.wikipedia.org/wiki/Circle_of_fifths">circle of fifths</a>. It's just the chromatic sequence. It'll tell you the keys that you can build with a handful of notes, but this doesn't give you any of the extra clues about key signature or interval that you get from the traditional circle. I'm using <a href="http://www.circle-of-fifths.net/learn.html" target="_blank">Jan's Circle of Fifths</a> (Flash) to teach myself how that all works.</p>
-    <p>The cranky scale generator knows about the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
-    <p>If you have any suggestions for making this better, you could <a href="http://www.arilacenski.com/about/">email me</a>, but it would be so much cooler if you sent me a pull request on <a href="https://github.com/tensory/firmataphone">Github</a>. <a href="http://github.com/neilk">neilk</a> did!</p>
+    <p>Superpeggio knows about the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
+    <p>If you have any suggestions for making this better, you could <a href="http://www.arilacenski.com/about/">email me</a>, but it would be much cooler if you sent me a pull request on <a href="https://github.com/tensory/firmataphone">Github</a>.</p>
+    <p class="attribution">Thanks! <a href="http://github.com/neilk">neilk</a>, <a href="http://freesound.org/people/thecluegeek/sounds/156370/">theclubgeek</a>, <a href="http://dirkgrayson.tumblr.com/">dirkgrayson</a></p>
 </div>
 <div id="colophon">CC-BY-SA <a href="http://www.arilacenski.com">Ari Lacenski</a> in late 2012 | Written in JavaScript and HTML5</div>
 </div>

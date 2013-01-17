@@ -443,7 +443,7 @@
                 }
 
                 if (searchResults.playing.length < 12) {
-                    trollBeat.stop();
+//                    trollBeat.stop();
                 }
 
                 if (searchResults.playing.length == _.keys(cycle.toneMap).length) {
@@ -451,10 +451,13 @@
                     trollBeat.play();
                     $('.troll').show();
                 } else if (searchResults.playing.length > 0 && searchResults.related.length == 0) {
-                    $('.none').show();
-                    $('.memberships').hide();
-                    $('.troll').hide();
-                    $('#scales').hide();
+                    // if in beat experiment mode, let it keep going
+                    if (!$('.troll').is(':visible')) {
+                        $('.none').show();
+                        $('.memberships').hide();
+                        $('.troll').hide();
+                        $('#scales').hide();
+                    }
 
                     $.fn.clearScale();
                     $('#scale').hide();
@@ -479,7 +482,7 @@
                 var notes = Object.keys(cycle.toLoop).sort();
                 if (notes.length) {
                     cycle.isLooping = true;
-                    var delay = 300; // ms; each short sound is 250ms
+                    var delay = 234; // ms; each short sound is 250ms
                     for (var i = 0; i < notes.length; i++) {
                         var player = ( function(noteName) {
                             return function() {
@@ -654,6 +657,7 @@
 
             $('#kill').click(function(e) {
                 e.preventDefault();
+                trollBeat.stop();
                 Cycle.resetLoop();
                 $.fn.resetView();
             });
@@ -811,6 +815,10 @@
     <div id="related">
         <div class="message troll">
             <img src="tumblr_lrldh5nJvh1qcit8q.gif"/></div>
+        <!--
+        http://www.tumblr.com/tagged/oontz-oontz-oontz
+        http://freesound.org/people/thecluegeek/sounds/156370/
+        -->
         <div class="message none">That's not part of any scale :(</div>
         <div class="message memberships">These will make</div>
         <div id="scales">
@@ -824,7 +832,7 @@
     <p>Click a few notes to learn the musical scales they produce.</p>
     <p>It is <strong>not</strong> a <a href="http://en.wikipedia.org/wiki/Circle_of_fifths">circle of fifths</a>. It's just the chromatic sequence. It'll tell you the keys that you can build with a handful of notes, but this doesn't give you any of the extra clues about key signature or interval that you get from the traditional circle. I'm using <a href="http://www.circle-of-fifths.net/learn.html" target="_blank">Jan's Circle of Fifths</a> (Flash) to teach myself how that all works.</p>
     <p>The cranky scale generator knows about the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
-    <p>If you have any suggestions for making this better, you could <a href="http://www.arilacenski.com/about/">email me</a>, but it would be so much cooler if you sent me a pull request on <a href="https://github.com/tensory/firmataphone">Github</a>.</p>
+    <p>If you have any suggestions for making this better, you could <a href="http://www.arilacenski.com/about/">email me</a>, but it would be so much cooler if you sent me a pull request on <a href="https://github.com/tensory/firmataphone">Github</a>. <a href="http://github.com/neilk">neilk</a> did!</p>
 </div>
 <div id="colophon">CC-BY-SA <a href="http://www.arilacenski.com">Ari Lacenski</a> in late 2012 | Written in JavaScript and HTML5</div>
 </div>

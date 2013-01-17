@@ -65,6 +65,8 @@
             }
         });
 
+        var trollBeat = new buzz.sound('files/156370__thecluegeek__techno-beat.wav', { loop: true });
+
         var Scale = function(cycle, root, subtype, type) {
             this.root = root;
             this.type = type;
@@ -440,8 +442,13 @@
                     $('#scales').html('');
                 }
 
+                if (searchResults.playing.length < 12) {
+                    trollBeat.stop();
+                }
+
                 if (searchResults.playing.length == _.keys(cycle.toneMap).length) {
                     $('.message').hide();
+                    trollBeat.play();
                     $('.troll').show();
                 } else if (searchResults.playing.length > 0 && searchResults.related.length == 0) {
                     $('.none').show();
@@ -658,9 +665,8 @@
             });
 
             var testKey = function testKey() {
-                $('#d-flat').click();
-                $('#b-flat').click();
-                $('#b').click();
+                $('.note-name').click();
+
             };
         });
     </script>
@@ -756,7 +762,7 @@
 
         #scale {
             display: none;
-            width: 320px;
+            width: 340px;
         }
 
         #scales ul {
@@ -776,6 +782,10 @@
             border-radius: 12px;
         }
 
+        .troll img {
+            width: 350px;
+        }
+
         #colophon {
             text-align: center;
             margin: 1.8em 0;
@@ -792,14 +802,15 @@
 <div id="wrap">
 <h1>cranky scale generator makes angry scales</h1>
 <div id="container" style="position: relative;">
-    <canvas id="wheel"></canvas>
+    <canvas id="wheel" class="animated"></canvas>
     <div id="buttons"></div>
     <button id="kill" disabled="disabled">hush</button>
 </div>
 <div id="results">
     <div id="current"></div>
     <div id="related">
-        <div class="message troll">Oww, that hurts!!</div>
+        <div class="message troll">
+            <img src="tumblr_lrldh5nJvh1qcit8q.gif"/></div>
         <div class="message none">That's not part of any scale :(</div>
         <div class="message memberships">These will make</div>
         <div id="scales">

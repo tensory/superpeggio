@@ -719,17 +719,40 @@
             font-family: serif;
         }
 
-        button#kill {
+        #controls {
+            text-align: center;
+            margin-bottom: 3em;
+        }
+
+        button {
             height: 40px;
             font-size: 2em;
             width: auto;
-            display: block;
-            margin: 0 auto 1.2em;
+            display: inline-block;
+            margin: 0 3px;
+
+        }
+
+        #yeah {
+            color: white;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+            border-width: 1px;
+            border-color: rgba(0, 0, 0, 0.247059);
+            display: none;
+            background: #da4f49; /* Old browsers */
+            background: -moz-linear-gradient(top, #da4f49 0%, #d87470 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#da4f49), color-stop(100%,#d87470)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #da4f49 0%,#d87470 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #da4f49 0%,#d87470 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #da4f49 0%,#d87470 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #da4f49 0%,#d87470 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#da4f49', endColorstr='#d87470',GradientType=0 ); /* IE6-9 */
         }
 
         h1 {
             font-size: 3em;
             width: 400px;
+            margin-bottom: 0;
             text-align: center;
         }
 
@@ -815,7 +838,10 @@
 <div id="container" style="position: relative;">
     <canvas id="wheel" class="animated"></canvas>
     <div id="buttons"></div>
-    <button id="kill" disabled="disabled">hush</button>
+    <div id="controls">
+        <button id="kill" disabled="disabled">hush</button>
+        <button id="yeah">yeah</button>
+    </div>
 </div>
 <div id="results">
     <div id="current"></div>
@@ -836,7 +862,7 @@
     <p>It is <strong>not</strong> a <a href="http://en.wikipedia.org/wiki/Circle_of_fifths">circle of fifths</a>. It's just the chromatic sequence. It'll tell you the keys that you can build with a handful of notes, but this doesn't give you any of the extra clues about key signature or interval that you get from the traditional circle. I'm using <a href="http://www.circle-of-fifths.net/learn.html" target="_blank">Jan's Circle of Fifths</a> (Flash) to teach myself how that all works.</p>
     <p>Superpeggio knows about the <a href="http://en.wikipedia.org/wiki/Major_scale">major scales</a> and the <a href="http://en.wikipedia.org/wiki/Minor_scale">natural, harmonic, and melodic minors</a>.</p>
     <p>If you have any suggestions for making this better, you could <a href="http://www.arilacenski.com/about/">email me</a>, but it would be much cooler if you sent me a pull request on <a href="https://github.com/tensory/firmataphone">Github</a>.</p>
-    <p class="attribution">Thanks! <a href="http://github.com/neilk">neilk</a>, <a href="http://freesound.org/people/thecluegeek/sounds/156370/">theclubgeek</a>, <a href="http://dirkgrayson.tumblr.com/">dirkgrayson</a></p>
+    <p class="attribution">Thanks! <a href="http://github.com/neilk">neilk</a>, <a href="http://freesound.org/people/thecluegeek/sounds/156370/">theclubgeek</a>, <a href="http://dirkgrayson.tumblr.com/">dirkgrayson</a>, <a href="http://www.freesound.org/people/donthemagicwon/sounds/86099/">donthemagicwon</a></p>
 </div>
 <div id="colophon">CC-BY-SA <a href="http://www.arilacenski.com">Ari Lacenski</a> in late 2012 | Written in JavaScript and HTML5</div>
 </div>

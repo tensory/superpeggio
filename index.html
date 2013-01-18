@@ -33,10 +33,15 @@
                 $.fn.resetView();
             });
 
+            $('#yeah').click(function(e) {
+                e.preventDefault();
+                yeahEffect.play();
+            });
+
             Wheel.draw(colors);
 
             $('h1').click(function(e) {
-                //testKey();
+                testKey();
             });
 
             var testKey = function testKey() {

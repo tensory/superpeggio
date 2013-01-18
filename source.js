@@ -33,6 +33,7 @@ $.fn.extend({
         $('#current').html('');
         $('#scales').html('');
         $('#kill').attr('disabled', 'disabled');
+        $('#yeah').hide();
         $('.note-name').removeClass('pressed');
     },
 
@@ -56,6 +57,7 @@ $.fn.extend({
 });
 
 var trollBeat = new buzz.sound('files/156370__thecluegeek__techno-beat.wav', { loop: true });
+var yeahEffect = new buzz.sound('files/86099__donthemagicwon__yeah.wav', { loop: false });
 
 var Scale = function(cycle, root, subtype, type) {
     this.root = root;
@@ -436,11 +438,13 @@ Cycle = (function() {
             $('.message').hide();
             trollBeat.play();
             $('.troll').show();
+            $('#yeah').show();
         } else if (searchResults.playing.length > 0 && searchResults.related.length == 0) {
             // if in beat experiment mode, let it keep going
             if (!$('.troll').is(':visible')) {
                 $('.none').show();
                 $('.memberships').hide();
+                $('#yeah').hide();
                 $('.troll').hide();
                 $('#scales').hide();
             }
